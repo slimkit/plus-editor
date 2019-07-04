@@ -1,5 +1,5 @@
 {
-  "name": "plus-editor",
+  "name": "plus-rich-text-editor",
   "version": "0.1.0",
   "description": "rich-text editor for plus",
   "main": "dist/main.bundle.js",
@@ -8,20 +8,20 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "dev": "webpack-dev-server",
-    "build": "webpack"
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --host 0.0.0.0",
+    "build": "cross-env NODE_ENV=production webpack"
   },
   "dependencies": {
-    "normalize.css": "^8.0.1",
     "quill": "^1.3.6"
   },
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",
+    "cross-env": "^5.2.0",
     "css-loader": "^3.0.0",
     "eslint": "^6.0.1",
     "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.7.0",
     "prettier": "^1.18.2",
-    "style-loader": "^0.23.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
     "webpack": "^4.35.2",

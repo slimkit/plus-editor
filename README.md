@@ -18,7 +18,7 @@
 	 ```js
 	 // 包装在数组中以便后续支持多图 以下面的实例格式进行json序列化
 	 // [
-	 //	  { id: 0, base64: 'data:image/jpeg;base64,/9j/2wCEAAgwcJCQ...' },
+	 //   { id: 0, base64: 'data:image/jpeg;base64,/9j/2wCEAAgwcJCQ...' },
 	 // ]
 	 // 调用 webview 的以下方法
 	 window.imagePreviewReceiver("[{\"id\":0,\"base64\":\"data:image/jpeg;base64,/9j/2wCEAAgwcJCQ...\"}]")
@@ -29,8 +29,23 @@
 	 ```js
 	 // 包装在数组中以便后续支持多图 以下面的实例格式进行json序列化
 	 // [
-	 //	  { id: 0, url: 'https://tsplus.zhibocloud.cn/storage/public:MjAxOC8xMi8yNC9FNnJUUGNUWWsyNTBwYkxQcXE3LmpwZWc=' },
+	 //   { id: 0, url: 'https://tsplus.zhibocloud.cn/storage/public:MjAxOC8xMi8yNC9FNnJUUGNUWWsyNTBwYkxQcXE3LmpwZWc=' },
 	 // ]
 	 // 调用 webview 的以下方法
 	 window.imageUrlReceiver("[{\"id\":0,\"url\":\"https://tsplus.zhibocloud.cn/storage/public:MjAxOC8xMi8yNC9FNnJUUGNUWWsyNTBwYkxQcXE3LmpwZWc=\"}]")
+	 ```
+
+### 完成编辑
+
+1. 移动端点击下一步或提交时, 向 webview 发送一条通知, 用于获取富文本内容
+   
+	 ```js
+	 // 调用 webview 以下方法
+	 window.editorSubmitReceiver()
+	 ```
+
+2. webview 收到通知后, 会将富文本内的内容发送给客户端
+
+	 ```js
+	 window.launcher.sendContentHTML('<h1>我是html字符串</h1><p><img src="https://xxx.png"></p>')
 	 ```

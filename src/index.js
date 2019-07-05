@@ -32,7 +32,8 @@ const quill = new Quill('#editor', {
 })
 
 window.androidWebviewReceiver = str => {
-  alert(str)
+  console.log(str)
+  quill.insertText(str)
 }
 
 export default quill

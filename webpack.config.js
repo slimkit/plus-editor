@@ -7,7 +7,7 @@ const webpack = require('webpack')
 module.exports = {
   entry: './src/index.js',
   output: {
-    filename: '[name].bundle.js',
+    filename: '[name].[hash].js',
     path: path.resolve(__dirname, 'dist'),
   },
   resolve: {

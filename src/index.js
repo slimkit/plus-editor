@@ -21,7 +21,7 @@ const quill = new Quill('#editor', {
         },
         image() {
           if (window.launcher) {
-            window.launcher.callAndroid('onChooseImage')
+            window.launcher.chooseImage()
           } else {
             alert('launcher 没有注入')
           }
@@ -31,9 +31,13 @@ const quill = new Quill('#editor', {
   },
 })
 
-window.androidWebviewReceiver = str => {
-  console.log(str)
-  quill.insertText(str)
+window.imagePreviewReceiver = str => {
+  alert('image preview received')
+  console.log('preview', str)
+}
+window.imageUrlReceiver = str => {
+  alert('image url received')
+  console.log('url', str)
 }
 
 export default quill

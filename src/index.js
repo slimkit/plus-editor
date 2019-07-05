@@ -2,23 +2,37 @@ import Quill from 'quill'
 import 'quill/assets/snow.styl'
 import './index.styl'
 
-let BlockEmbed = Quill.import('blots/block/embed')
+// import blots
+import './blots/divider'
 
-class DividerBlot extends BlockEmbed {}
-DividerBlot.blotName = 'divider'
-DividerBlot.tagName = 'hr'
-Quill.register(DividerBlot)
-
-new Quill('#editor', {
+const quill = new Quill('#editor', {
   debug: 'info',
   theme: 'snow',
+  placeholder: '请输入内容',
   modules: {
-    toolbar: [
-      ['bold', 'italic', 'strike'],
-      [{ header: 1 }, { header: 2 }, { header: 3 }],
-      [{ align: '' }, { align: 'center' }, { align: 'right' }],
-      ['blockquote', 'image', 'link', 'divider'],
-      ['clean'],
-    ],
+    toolbar: {
+      container: '#toolbar',
+      handlers: {
+        divider() {
+          const range = this.quill.getSelection(true)
+          this.quill.insertText(range.index, '\n', Quill.sources.USER)
+          this.quill.insertEmbed(range.index + 1, 'divider', true, Quill.sources.USER)
+          this.quill.setSelection(range.index + 2, Quill.sources.SILENT)
+        },
+        image() {
+          if (window.launcher) {
+            window.launcher.callAndroid('onChooseImage')
+          } else {
+            alert('launcher 没有注入')
+          }
+        },
+      },
+    },
   },
 })
+
+window.androidWebviewReceiver = str => {
+  alert(str)
+}
+
+export default quill

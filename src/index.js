@@ -37,11 +37,15 @@ const quill = new Quill('#editor', {
 })
 
 window.imagePreviewReceiver = str => {
-  alert('收到图片预览')
+  const range = quill.getSelection()
+  const src = JSON.parse(str).image
+  quill.insertEmbed(range.index, 'image', src, Quill.sources.USER)
   console.log('preview', str)
 }
 window.imageUrlReceiver = str => {
-  alert('收到图片上传完毕的地址')
+  const url = JSON.parse(str).url
+  quill.insertText(quill.getLength() - 1, '上传完毕:')
+  quill.insertEmbed(quill.getLength() - 1, 'image', url, Quill.sources.USER)
   console.log('url', str)
 }
 window.editorSubmitReceiver = () => {

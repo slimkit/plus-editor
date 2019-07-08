@@ -944,6 +944,9 @@ body {
   padding: 0;
   height: 100%;
 }
+.hidden-input {
+  display: none;
+}
 .editor-wrap {
   display: flex;
   flex-direction: column;

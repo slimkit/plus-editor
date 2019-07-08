@@ -4,6 +4,7 @@ import './index.styl'
 
 // import blots
 import './blots/divider'
+import { callMethod } from './caller'
 
 const quill = new Quill('#editor', {
   debug: 'info',
@@ -20,15 +21,14 @@ const quill = new Quill('#editor', {
           this.quill.setSelection(range.index + 2, Quill.sources.SILENT)
         },
         image() {
-          if (window.launcher) {
-            try {
-              window.launcher.chooseImage()
-            } catch (error) {
-              alert('通信失败, launcher.chooseImage() 方法不存在')
-            }
-          } else {
-            // not in webview 调用原生上传
-            alert('不在webview内')
+          let inWebview = false
+          try {
+            inWebview = callMethod('chooseImage')
+          } catch (error) {
+            alert('通信失败, 对应的 chooseImage() 方法不存在')
+          }
+          if (!inWebview) {
+            alert('不在webview中')
           }
         },
       },
@@ -46,11 +46,11 @@ window.imageUrlReceiver = str => {
 }
 window.editorSubmitReceiver = () => {
   alert('收到提交请求')
-  const html = quill.getContents()
+  const html = quill.root.innerHTML()
   try {
-    window.launcher.sendContentHTML(html)
+    callMethod('sendContentHTML', html)
   } catch (error) {
-    alert('通信失败, launcher.sendContentHTML() 方法不存在')
+    alert('通信失败, 对应的 sendContentHTML() 方法不存在')
   }
 }
 

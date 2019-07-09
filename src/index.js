@@ -7,7 +7,7 @@ import './blots/divider'
 import { callMethod } from './caller'
 
 const quill = new Quill('#editor', {
-  debug: 'info',
+  // debug: 'info',
   theme: 'snow',
   placeholder: '请输入内容',
   modules: {
@@ -51,7 +51,7 @@ window.imageUrlReceiver = str => {
   }
 }
 window.editorSubmitReceiver = () => {
-  const html = quill.root.innerHTML()
+  const html = quill.root.innerHTML
   try {
     callMethod('sendContentHTML', html)
   } catch (error) {

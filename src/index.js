@@ -25,7 +25,7 @@ const quill = new Quill('#editor', {
           try {
             inWebview = callMethod('chooseImage')
           } catch (error) {
-            alert('通信失败, 对应的 chooseImage() 方法不存在')
+            this.quill.insertText('通信失败' + error)
           }
           if (!inWebview) {
             alert('不在webview中')
@@ -42,7 +42,6 @@ window.imagePreviewReceiver = str => {
   for (const item of srcList) {
     quill.insertEmbed(range.index, 'image', item.base64, Quill.sources.USER)
   }
-  console.log('preview', str)
 }
 window.imageUrlReceiver = str => {
   const urlList = JSON.parse(str).url
@@ -50,15 +49,13 @@ window.imageUrlReceiver = str => {
   for (const item of urlList) {
     quill.insertEmbed(quill.getLength() - 1, 'image', item.url, Quill.sources.USER)
   }
-  console.log('url', str)
 }
 window.editorSubmitReceiver = () => {
-  alert('收到提交请求')
   const html = quill.root.innerHTML()
   try {
     callMethod('sendContentHTML', html)
   } catch (error) {
-    alert('通信失败, 对应的 sendContentHTML() 方法不存在')
+    quill.insertText('通信失败' + error)
   }
 }
 

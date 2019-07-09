@@ -1,7 +1,8 @@
 export function callMethod(fnName, params) {
   if (window.launcher) {
     // in Android
-    window.launcher[fnName](params)
+    if (params) window.launcher[fnName](params)
+    else window.launcher[fnName]()
   } else if (window.webkit) {
     // in IOS
     window.webkit.messageHandlers.MobilePhoneCall.postMessage({ funcName: fnName, value: params })

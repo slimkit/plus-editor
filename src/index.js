@@ -38,14 +38,18 @@ const quill = new Quill('#editor', {
 
 window.imagePreviewReceiver = str => {
   const range = quill.getSelection()
-  const src = JSON.parse(str).image
-  quill.insertEmbed(range.index, 'image', src, Quill.sources.USER)
+  const srcList = JSON.parse(str)
+  for (const item of srcList) {
+    quill.insertEmbed(range.index, 'image', item.base64, Quill.sources.USER)
+  }
   console.log('preview', str)
 }
 window.imageUrlReceiver = str => {
-  const url = JSON.parse(str).url
+  const urlList = JSON.parse(str).url
   quill.insertText(quill.getLength() - 1, '上传完毕:')
-  quill.insertEmbed(quill.getLength() - 1, 'image', url, Quill.sources.USER)
+  for (const item of urlList) {
+    quill.insertEmbed(quill.getLength() - 1, 'image', item.url, Quill.sources.USER)
+  }
   console.log('url', str)
 }
 window.editorSubmitReceiver = () => {

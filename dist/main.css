@@ -944,19 +944,25 @@ body {
   padding: 0;
   height: 100%;
 }
-.hidden-input {
-  display: none;
-}
-.editor-wrap {
+.quill-editor-wrap {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
 }
-.editor-wrap .ql-toolbar {
-  flex: none;
+.quill-editor-wrap .hidden-input {
+  display: none;
 }
-.editor-wrap .ql-container {
+.quill-editor-wrap .ql-toolbar {
+  position: fixed;
+  z-index: 1;
+  flex: none;
+  width: 100%;
+  background-color: #fff;
+}
+.quill-editor-wrap .ql-container {
   flex: auto;
+  padding-top: 42px;
   height: auto;
 }
 

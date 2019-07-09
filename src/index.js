@@ -36,24 +36,37 @@ const quill = new Quill('#editor', {
   },
 })
 
+/** 上传的图片列表 */
+const images = []
+
 window.imagePreviewReceiver = str => {
   const range = quill.getSelection()
   const srcList = JSON.parse(str)
   for (const item of srcList) {
+    images.push({ id: item.id })
     quill.insertEmbed(range.index, 'image', item.base64, Quill.sources.USER)
   }
 }
+
 window.imageUrlReceiver = str => {
   const urlList = JSON.parse(str).url
-  quill.insertText(quill.getLength() - 1, '上传完毕:')
   for (const item of urlList) {
-    quill.insertEmbed(quill.getLength() - 1, 'image', item.url, Quill.sources.USER)
+    const index = images.findIndex(image => image.id === item.id)
+    if (index >= 0) images[index].src = item.url
+    // quill.insertEmbed(quill.getLength() - 1, 'image', item.url, Quill.sources.USER)
   }
 }
+
 window.editorSubmitReceiver = () => {
-  const html = quill.root.innerHTML
+  let html = quill.root.innerHTML
+
+  // TODO: 替换上传完毕的图片
+
+  /** 未上传完毕的图片 */
+  const pendingImages = images.filter(image => !image.src)
+
   try {
-    callMethod('sendContentHTML', html)
+    callMethod('sendContentHTML', { html, pendingImages })
   } catch (error) {
     quill.insertText('通信失败' + error)
   }

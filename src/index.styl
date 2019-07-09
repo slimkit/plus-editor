@@ -5,14 +5,14 @@ body {
   height: 100%
 }
 
-.hidden-input {
-  display: none
-}
-
-.editor-wrap {
+.quill-editor-wrap {
   display: flex
   flex-direction: column
   height: 100%
+
+  .hidden-input {
+    display: none
+  }
 
   .ql-toolbar {
     flex: none
@@ -20,6 +20,6 @@ body {
 
   .ql-container {
     flex: auto
-    height: auto
+    min-height: 0
   }
 }

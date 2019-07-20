@@ -5,13 +5,14 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const webpack = require('webpack')
 
 module.exports = {
-  entry: './src/index.js',
+  mode: 'development',
+  entry: './src/index.ts',
   output: {
     filename: '[name].[hash].js',
     path: path.resolve(__dirname, 'dist'),
   },
   resolve: {
-    extensions: ['.js', '.json', '.ts'],
+    extensions: ['.ts', '.js', '.json'],
   },
 
   devtool: 'cheap-module-eval-source-map ',
@@ -22,6 +23,11 @@ module.exports = {
 
   module: {
     rules: [
+      {
+        test: /\.ts?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
       {
         test: /\.(styl|css)$/,
         use: [

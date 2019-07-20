@@ -1,4 +1,4 @@
-export function callMethod(fnName, params) {
+export function callMethod(fnName: string, params: any = {}) {
   if (window.launcher) {
     // in Android
     if (params) window.launcher[fnName](JSON.stringify(params))
@@ -8,7 +8,7 @@ export function callMethod(fnName, params) {
     window.webkit.messageHandlers.MobilePhoneCall.postMessage({ funcName: fnName, params })
   } else if (window.top) {
     // in iframe
-    window.top.postMessage({ funcName: fnName, params })
+    window.top.postMessage({ funcName: fnName, params }, '*')
   } else {
     // not in webview
     return false

@@ -74,11 +74,17 @@
 
    ```js
    // 安卓端
-   window.launcher.sendContentHTML('<h1>我是html字符串</h1><p><img src="https://xxx.png"></p>')
+   window.launcher.sendContentHTML(JSON.stringify({ html: '<h1>我是html字符串</h1><p><img src="https://xxx.png"></p>', pendingImages: [] }))
    
    // IOS端
-   window.webkit.messageHandlers.MobilePhoneCall.postMessage({ funcName: 'sendContentHTML', data: '<h1>我是html字符串</h1><p><img src="https://xxx.png"></p>' })
+   window.webkit.messageHandlers.MobilePhoneCall.postMessage({ 
+     funcName: 'sendContentHTML', 
+     params: { html: '<h1>我是html字符串</h1><p><img src="https://xxx.png"></p>', pendingImages: [] }
+   })
    
    // PC端 (iframe)
-   window.top.postMessage({funcName: 'sendContentHTML', params: {}})
+   window.top.postMessage({
+     funcName: 'sendContentHTML', 
+     params: { html: '<h1>我是html字符串</h1><p><img src="https://xxx.png"></p>', pendingImages: [] }
+   })
    ```

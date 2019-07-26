@@ -1,11 +1,10 @@
 {
-  "name": "plus-rich-text-editor",
+  "name": "@slimkit/plus-editor",
   "version": "0.1.0",
   "description": "rich-text editor for plus",
   "main": "dist/main.bundle.js",
   "repository": "git@github.com:mutoe/plus-editor.git",
   "author": "mutoe <mutoe@foxmail.com>",
-  "license": "MIT",
   "private": false,
   "scripts": {
     "dev": "webpack-dev-server --host 0.0.0.0",

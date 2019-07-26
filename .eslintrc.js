@@ -1,16 +1,13 @@
 module.exports = {
+  parser: '@typescript-eslint/parser',
   env: {
     browser: true,
-    es6: true,
     node: true,
   },
-  extends: 'eslint:recommended',
-  globals: {
-    Atomics: 'readonly',
-    SharedArrayBuffer: 'readonly',
-  },
+  plugins: ['@typescript-eslint'],
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/eslint-recommended'],
   parserOptions: {
-    ecmaVersion: 2018,
+    project: './tsconfig.json',
     sourceType: 'module',
   },
   rules: {},

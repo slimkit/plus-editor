@@ -85,7 +85,7 @@ window.imageUrlReceiver = str => {
 }
 
 window.editorSubmitReceiver = () => {
-  let html = quill.root.innerHTML
+  const html = quill.root.innerHTML
 
   // TODO: 替换上传完毕的图片
 

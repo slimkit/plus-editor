@@ -28,8 +28,6 @@
   // PC端(iframe)
   window.top.postMessage({funcName: 'chooseImage'})
   ```
-  
-  注: PC
 
 2. 宿主端收到图片选择的通知后, 调起图片选择功能,   
    图片选择完成后, 后台静默上传图片, 同时生成一张base64格式缩略图(压缩质量), 加上图片唯一标示(id)连同 base64 字符串一同发送给 webview
@@ -47,7 +45,7 @@
    iframe.postMessage({
      funcName: 'imagePreviewReceiver',
      params: { id: 0, base64: 'data:image/jpeg;base64,/9j/2wCEAAgwcJCQ...' },
-  })
+   })
    ```
 
    待图片上传完毕后, 将图片网络地址连同刚才的唯一标识(id)再次发送给 webview

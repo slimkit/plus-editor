@@ -50,8 +50,14 @@ module.exports = {
     new webpack.ProgressPlugin(),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
+      filename: 'index.html',
       template: 'src/index.html',
       title: 'develop',
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'textarea.html',
+      template: 'src/textarea.html',
+      chunks: [],
     }),
     new MiniCssExtractPlugin(),
     new webpack.HotModuleReplacementPlugin(),

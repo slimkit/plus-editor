@@ -5,6 +5,7 @@ declare global {
     launcher: any
     /** IOS 端注入 webview 中的对象 */
     webkit: any
+    messageHandlers: any
     /** 接收图片预览地址的钩子 */
     imagePreviewReceiver: (src: string) => void
     /** 接收图片实际地址的钩子 */

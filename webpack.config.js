@@ -6,7 +6,7 @@ const webpack = require('webpack')
 
 module.exports = {
   mode: 'development',
-  entry: './src/index.ts',
+  entry: ['./src/index.ts'],
   output: {
     filename: '[name].[hash].js',
     path: path.resolve(__dirname, 'dist'),

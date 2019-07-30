@@ -3,7 +3,7 @@ export function callMethod(fnName: string, params: any = {}) {
     // in Android
     if (params) window.launcher[fnName](JSON.stringify(params))
     else window.launcher[fnName]()
-  } else if (window.webkit) {
+  } else if (window.messageHandlers) {
     // in IOS
     // window.webkit.messageHandlers.MobilePhoneCall.postMessage({ funcName: fnName, params })
     if (params) window.messageHandlers[fnName](JSON.stringify(params))

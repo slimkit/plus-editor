@@ -1,4 +1,4 @@
-export function callMethod(fnName: string, params: any = {}) {
+export function callMethod(fnName: string, params: any = undefined) {
   console.log('debug callMethod', fnName, params) // eslint-disable-line no-console
   if (window.launcher) {
     // in Android

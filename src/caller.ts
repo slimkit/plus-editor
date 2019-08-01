@@ -1,4 +1,5 @@
 export function callMethod(fnName: string, params: any = {}) {
+  console.log('debug callMethod', fnName, params) // eslint-disable-line no-console
   if (window.launcher) {
     // in Android
     if (params) window.launcher[fnName](JSON.stringify(params))

@@ -71,16 +71,16 @@ window.imagePreviewReceiver = str => {
   const range = quill.getSelection()
   const srcList = JSON.parse(str)
   for (const item of srcList) {
-    images.push({ id: item.id })
+    images.push({ id: +item.id })
     const index = (range && range.index) || 0
-    quill.insertEmbed(index, 'image', { id: item.id, url: item.base64 }, 'user')
+    quill.insertEmbed(index, 'image', { id: +item.id, url: item.base64 }, 'user')
   }
 }
 
 window.imageUrlReceiver = str => {
-  const urlList = JSON.parse(str).url || []
+  const urlList = JSON.parse(str) || []
   for (const item of urlList) {
-    const index = images.findIndex(image => image.id === item.id)
+    const index = images.findIndex(image => image.id === +item.id)
     if (index >= 0) images[index].src = item.url
   }
 }
@@ -88,10 +88,9 @@ window.imageUrlReceiver = str => {
 window.editorSubmitReceiver = () => {
   let html = quill.root.innerHTML
 
-  // TODO: 替换上传完毕的图片
   images.forEach(image => {
     if (!image.src) return
-    const regex = new RegExp(`<img id="quill-image-${image.id}" src="\S+">`) // eslint-disable-line no-useless-escape
+    const regex = new RegExp(`<img id="quill-image-${image.id}" src="\\S+">`)
     html = html.replace(regex, `<img id="quill-image-${image.id}" src="${image.src}">`)
   })
 

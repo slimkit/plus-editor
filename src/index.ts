@@ -21,6 +21,7 @@ import './index.styl'
 
 // import blots
 import './blots/divider'
+import './blots/image'
 import { callMethod } from './caller'
 
 const quill = new Quill('#editor', {
@@ -72,7 +73,7 @@ window.imagePreviewReceiver = str => {
   for (const item of srcList) {
     images.push({ id: item.id })
     const index = (range && range.index) || 0
-    quill.insertEmbed(index, 'image', { id: item.id, src: item.base64 }, 'user')
+    quill.insertEmbed(index, 'image', { id: item.id, url: item.base64 }, 'user')
   }
 }
 
@@ -90,8 +91,8 @@ window.editorSubmitReceiver = () => {
   // TODO: 替换上传完毕的图片
   images.forEach(image => {
     if (!image.src) return
-    const regex = new RegExp(`<img id="quill-image-${image.id}" src="\\S+">`)
-    html = html.replace(regex, `<img id="quill-image-${image.src}" src="\\S+">`)
+    const regex = new RegExp(`<img id="quill-image-${image.id}" src="\S+">`) // eslint-disable-line no-useless-escape
+    html = html.replace(regex, `<img id="quill-image-${image.id}" src="${image.src}">`)
   })
 
   /** 未上传完毕的图片 */

@@ -959,4 +959,20 @@ body {
   flex: auto;
   min-height: 0;
 }
+.quill-editor-wrap .quill-image {
+  position: relative;
+}
+.quill-editor-wrap .quill-image::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: block;
+  background-color: rgba(0,0,0,0.4);
+  color: #fff;
+}
+.quill-editor-wrap .quill-image.failed::after {
+  content: '上传失败';
+}
 

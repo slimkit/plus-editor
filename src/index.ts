@@ -88,14 +88,13 @@ window.imageUrlReceiver = str => {
 window.editorSubmitReceiver = () => {
   let html = quill.root.innerHTML
 
+  /** 未上传完毕的图片 */
+  const pendingImages: number[] = []
   images.forEach(image => {
-    if (!image.src) return
+    if (!image.src) return pendingImages.push(image.id)
     const regex = new RegExp(`<img id="quill-image-${image.id}" src="\\S+">`)
     html = html.replace(regex, `<img id="quill-image-${image.id}" src="${image.src}">`)
   })
-
-  /** 未上传完毕的图片 */
-  const pendingImages = images.filter(image => !image.src)
 
   try {
     callMethod('sendContentHTML', { html, pendingImages })

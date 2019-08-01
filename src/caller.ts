@@ -6,7 +6,6 @@ export function callMethod(fnName: string, params: any = undefined) {
     else window.launcher[fnName]()
   } else if (window.messageHandlers) {
     // in IOS
-    // window.webkit.messageHandlers.MobilePhoneCall.postMessage({ funcName: fnName, params })
     if (params) window.messageHandlers[fnName](JSON.stringify(params))
     else window.messageHandlers[fnName]()
   } else if (window.top) {

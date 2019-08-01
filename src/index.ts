@@ -77,18 +77,22 @@ window.imagePreviewReceiver = str => {
 }
 
 window.imageUrlReceiver = str => {
-  const urlList = JSON.parse(str).url
+  const urlList = JSON.parse(str).url || []
   for (const item of urlList) {
     const index = images.findIndex(image => image.id === item.id)
     if (index >= 0) images[index].src = item.url
-    // quill.insertEmbed(quill.getLength() - 1, 'image', item.url, 'user')
   }
 }
 
 window.editorSubmitReceiver = () => {
-  const html = quill.root.innerHTML
+  let html = quill.root.innerHTML
 
   // TODO: 替换上传完毕的图片
+  images.forEach(image => {
+    if (!image.src) return
+    const regex = new RegExp(`<img id="quill-image-${image.id}" src="\\S+">`)
+    html = html.replace(regex, `<img id="quill-image-${image.src}" src="\\S+">`)
+  })
 
   /** 未上传完毕的图片 */
   const pendingImages = images.filter(image => !image.src)

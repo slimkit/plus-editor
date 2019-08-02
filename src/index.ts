@@ -1,5 +1,7 @@
 declare global {
   interface Window {
+    /** 是否为 debug 模式 */
+    debug: boolean
     quill: Quill
     /** Android 端注入 webview 中的对象 */
     launcher: any
@@ -73,7 +75,9 @@ window.imagePreviewReceiver = str => {
   for (const item of srcList) {
     images.push({ id: +item.id })
     const index = (range && range.index) || 0
-    quill.insertEmbed(index, 'image', { id: +item.id, url: item.base64 }, 'user')
+    quill.insertText(index, '\n', 'user')
+    quill.insertEmbed(index + 1, 'image', { id: +item.id, url: item.base64 }, 'user')
+    quill.setSelection(index + 2, 0, 'silent')
   }
 }
 

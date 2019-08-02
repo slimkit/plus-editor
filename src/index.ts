@@ -1,22 +1,3 @@
-declare global {
-  interface Window {
-    /** 是否为 debug 模式 */
-    debug: boolean
-    quill: Quill
-    /** Android 端注入 webview 中的对象 */
-    launcher: any
-    /** IOS 端注入 webview 中的对象 */
-    webkit: any
-    messageHandlers: any
-    /** 接收图片预览地址的钩子 */
-    imagePreviewReceiver: (src: string) => void
-    /** 接收图片实际地址的钩子 */
-    imageUrlReceiver: (src: string) => void
-    /** 接收提交请求的钩子, 会触发各端对应的提交事件 */
-    editorSubmitReceiver: (src: string) => void
-  }
-}
-
 import Quill from 'quill'
 import 'quill/assets/snow.styl'
 import './index.styl'

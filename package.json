@@ -10,8 +10,8 @@
     "dev": "webpack-dev-server",
     "build": "webpack --mode production",
     "lint": "eslint . --ext .js,.ts",
-    "serve": "serve dist",
-    "test": "npm run build && npm run serve -- -l 8089 & cypress run",
+    "serve": "serve dist -l 8089",
+    "test": "cypress run",
     "test:dev": "npm run dev -- --port 8089 & cypress open"
   },
   "dependencies": {

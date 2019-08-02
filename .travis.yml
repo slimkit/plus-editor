@@ -1,0 +1,20 @@
+language: node_js
+
+node_js: node
+
+addons:
+  apt:
+    packages:
+      - libgconf-2-4
+
+cache:
+  directories:
+    - ~/.npm
+    - ~/.cache
+  override:
+    - npm ci
+    - npm run cy:verify
+
+script:
+  - yarn serve &
+  - yarn test

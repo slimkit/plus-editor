@@ -24,6 +24,14 @@
 
 ## 事件
 
+### 向富文本编辑器置入内容
+
+1. 客户端向编辑器插入内容调用 webview 以下内容
+
+   ``` js
+   window.quill.root.innerHTML = "<p>我是html字符串</p>"
+   ```
+
 ### 图片
 
 1. 点击富文本编辑器中的图片按钮后, 向各端发起图片选择的方法 `chooseImage()`
@@ -46,10 +54,10 @@
 4. 图片上传失败后, 各端调用 webview 的以下方法通知 webview 在 id 为1的图片上显示上传失败的提示
 
    ``` js
-   window.imageFailedReceiver(1)
+   window.imageFailedReceiver("1")
    ```
 
-5. 用户点击上传失败的图片时, 会调用各端的 `reuploadImage(1)` 方法通知重传,  
+5. 用户点击上传失败的图片时, 会调用各端的 `reuploadImage("1")` 方法通知重传,  
    重传失败时重复第 4 步, 重传成功重复第 3 步.
    
 

@@ -8,12 +8,10 @@ addons:
       - libgconf-2-4
 
 cache:
+  yarn: true
   directories:
     - ~/.npm
     - ~/.cache
-  override:
-    - npm ci
-    - npm run cy:verify
 
 script:
   - yarn serve &

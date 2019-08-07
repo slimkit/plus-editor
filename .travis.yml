@@ -9,9 +9,6 @@ addons:
 
 cache:
   yarn: true
-  directories:
-    - ~/.npm
-    - ~/.cache
 
 script:
   - yarn serve &

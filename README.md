@@ -1,6 +1,6 @@
 # Plus rich-text editor
 
-![Travis (.org)](https://img.shields.io/travis/mutoe/plus-editor?style=flat-square)
+![Travis (.org)](https://img.shields.io/travis/slimkit/plus-editor?style=flat-square)
 
 ## webview / iframe 通信
 

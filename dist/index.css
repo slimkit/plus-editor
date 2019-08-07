@@ -965,6 +965,7 @@ body {
 }
 .ql-editor {
   padding: 12px 15px;
+  height: auto;
 }
 .ql-editor img {
   max-width: 100%;

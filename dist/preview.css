@@ -941,10 +941,10 @@
 body {
   margin: 0;
 }
-.quill-editor {
+.ql-editor {
   padding: 12px 15px;
 }
-.quill-editor img {
+.ql-editor img {
   max-width: 100%;
 }
 

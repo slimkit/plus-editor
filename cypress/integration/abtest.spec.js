@@ -171,8 +171,10 @@ describe('Rech-text editor', () => {
             cy.spy(win.launcher, 'reuploadImage')
 
             win.imageFailedReceiver('1')
+
             cy.wait(200).then(() => {
               cy.get('@image')
+                .should('not.have.attr', 'src', base64)
                 .click()
                 .should('have.attr', 'src', base64)
             })

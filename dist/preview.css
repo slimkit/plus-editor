@@ -938,25 +938,13 @@
   border: 1px solid #ccc;
 }
 
-html,
 body {
   margin: 0;
-  padding: 0;
-  height: 100%;
 }
-.quill-editor-wrap {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+.quill-editor {
+  padding: 12px 15px;
 }
-.quill-editor-wrap .hidden-input {
-  display: none;
-}
-.quill-editor-wrap .ql-toolbar {
-  flex: none;
-}
-.quill-editor-wrap .ql-container {
-  flex: auto;
-  min-height: 0;
+.quill-editor img {
+  max-width: 100%;
 }
 

@@ -1,6 +1,7 @@
 import Quill from 'quill'
 import 'quill/assets/snow.styl'
 import './index.styl'
+import './preview.styl'
 
 // import blots
 import './blots/divider'

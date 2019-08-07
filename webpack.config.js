@@ -6,7 +6,10 @@ const webpack = require('webpack')
 
 module.exports = {
   mode: 'development',
-  entry: ['./src/index.ts'],
+  entry: {
+    index: './src/index.ts',
+    preview: './src/preview.ts',
+  },
   output: {
     filename: '[name].[hash].js',
     path: path.resolve(__dirname, 'dist'),
@@ -53,13 +56,16 @@ module.exports = {
       filename: 'index.html',
       template: 'src/index.html',
       title: 'develop',
+      excludeChunks: ['preview'],
     }),
     new HtmlWebpackPlugin({
       filename: 'textarea.html',
       template: 'src/textarea.html',
-      chunks: [],
+      excludeChunks: ['preview'],
     }),
-    new MiniCssExtractPlugin(),
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+    }),
     new webpack.HotModuleReplacementPlugin(),
   ],
 }

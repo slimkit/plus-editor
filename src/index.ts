@@ -111,6 +111,10 @@ window.editorSubmitReceiver = () => {
   }
 }
 
+window.addEventListener('resize', () => {
+  quill.root.scrollTop = quill.root.scrollHeight
+})
+
 window.quill = quill
 
 export default quill

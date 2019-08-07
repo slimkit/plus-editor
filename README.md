@@ -1,5 +1,7 @@
 # Plus rich-text editor
 
+![Travis (.org)](https://img.shields.io/travis/mutoe/plus-editor?style=flat-square)
+
 ## webview / iframe 通信
 
 ### 页面地址

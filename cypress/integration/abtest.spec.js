@@ -6,21 +6,23 @@ describe('Rech-text editor', () => {
   })
 
   context('Framework', () => {
-    it.skip('should be run in Android webview', () => {
+    it('should be run in Android webview', () => {
       cy.visit('/')
       cy.window().then(win => {
         win.launcher = {
           chooseImage() {},
         }
-
         cy.spy(win.launcher, 'chooseImage')
-        cy.get('.ql-toolbar .ql-image').click()
 
-        expect(win.launcher.chooseImage).to.be.called()
+        cy.get('.ql-toolbar .ql-image')
+          .click()
+          .then(() => {
+            expect(win.launcher.chooseImage).to.be.calledWith()
+          })
       })
     })
 
-    it.skip('should be run in iOS webview', () => {
+    it('should be run in iOS webview', () => {
       cy.visit('/')
       cy.window().then(win => {
         win.messageHandlers = {
@@ -28,9 +30,11 @@ describe('Rech-text editor', () => {
         }
 
         cy.spy(win.messageHandlers, 'chooseImage')
-        cy.get('.ql-toolbar .ql-image').click()
-
-        expect(win.messageHandlers.chooseImage).to.be.called()
+        cy.get('.ql-toolbar .ql-image')
+          .click()
+          .then(() => {
+            expect(win.messageHandlers.chooseImage).to.be.calledWith()
+          })
       })
     })
 
@@ -53,6 +57,33 @@ describe('Rech-text editor', () => {
         cy.get('.ql-editor p').should('contain', 'world')
       })
     })
+
+    // 这个测试用例在 headless 下无法通过
+    it.skip('should be scroll to cursor position when window size change', () => {
+      cy.visit('/')
+      cy.get('.ql-editor')
+        .type('start{enter}')
+        .type(
+          new Array(80)
+            .fill()
+            .map((_, i) => `${i}{enter}`)
+            .join(''),
+        )
+        .type('end')
+        .then($el => {
+          $el.scrollTop = 0
+        })
+      cy.window().then(win => {
+        const el = win.document.querySelector('.ql-editor')
+        el.scrollTop = 0
+        cy.wait(500).then(() => {
+          cy.viewport(360, 360)
+          cy.wait(10).then(() => {
+            expect(el.scrollTop).to.equal(el.scrollHeight - el.clientHeight)
+          })
+        })
+      })
+    })
   })
 
   context('Image interface', () => {
@@ -73,6 +104,13 @@ describe('Rech-text editor', () => {
 
           cy.get(`#quill-image-1`).should('have.attr', 'src', base64)
         })
+      })
+    })
+
+    it('cursor should be after image', () => {
+      cy.window().then(win => {
+        const { index } = win.quill.getSelection()
+        expect(index).to.equal(14)
       })
     })
 
@@ -114,7 +152,7 @@ describe('Rech-text editor', () => {
       })
     })
 
-    it.skip('should can be upload failed', () => {
+    it('should can be upload failed', () => {
       cy.visit('/')
       cy.window().then(win => {
         win.debug = true
@@ -122,17 +160,23 @@ describe('Rech-text editor', () => {
         cy.readFile('cypress/fixtures/preview_image.jpeg', 'base64').then(image => {
           const base64 = `data:image/jpeg;base64,${image}`
           win.imagePreviewReceiver(JSON.stringify([{ id: 1, base64 }]))
-          cy.get(`#quill-image-1`).should('have.attr', 'src', base64)
+          cy.get(`#quill-image-1`)
+            .as('image')
+            .should('have.attr', 'src', base64)
 
-          cy.wait(1000)
-          win.launcher = {
-            reuploadImage() {},
-          }
-          cy.spy(win.launcher, 'reuploadImage')
+          cy.wait(200).then(() => {
+            win.launcher = {
+              reuploadImage() {},
+            }
+            cy.spy(win.launcher, 'reuploadImage')
 
-          win.imageFailedReceiver('1')
-          cy.wait(200)
-          cy.get('#quill-image-1').click()
+            win.imageFailedReceiver('1')
+            cy.wait(200).then(() => {
+              cy.get('@image')
+                .click()
+                .should('have.attr', 'src', base64)
+            })
+          })
         })
       })
     })

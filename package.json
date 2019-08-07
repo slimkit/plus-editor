@@ -12,7 +12,7 @@
     "lint": "eslint . --ext .js,.ts",
     "serve": "serve dist -l 8089",
     "test": "cypress run",
-    "test:dev": "npm run dev -- --port 8089 & cypress open"
+    "test:dev": "yarn dev --port 8089 & cypress open"
   },
   "dependencies": {
     "quill": "^1.3.6"

@@ -84,7 +84,7 @@ window.imageFailedReceiver = imageId => {
   )
 
   const imageReuploadeHandler = () => {
-    callMethod('reuploadImage', imageId)
+    callMethod('reuploadImage', +imageId)
     el.setAttribute('src', images[index].base64!)
   }
   el.addEventListener('click', imageReuploadeHandler, { once: true })

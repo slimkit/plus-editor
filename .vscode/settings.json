@@ -3,5 +3,20 @@
   "prettier.eslintIntegration": false,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "eslint.validate": ["javascript", "javascriptreact", "typescript"],
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+
+  // stylus
+  "languageStylus.useSeparator": false,
+  "languageStylus.useBuiltinFunctions": true,
+  "stylusSupremacy.alwaysUseNoneOverZero": true,
+  "stylusSupremacy.alwaysUseZeroWithoutUnit": true,
+  "stylusSupremacy.insertParenthesisAroundIfCondition": false,
+  "stylusSupremacy.insertSemicolons": true,
+  "stylusSupremacy.reduceMarginAndPaddingValues": true,
+  "stylusSupremacy.selectorSeparator": "\n",
+  "stylusSupremacy.sortProperties": "grouped",
+  "stylusSupremacy.alwaysUseImport": true,
+  "stylusSupremacy.alwaysUseExtends": true,
+  "stylusSupremacy.alwaysUseAtBlock": true,
+  "stylusSupremacy.insertNewLineAroundOthers": true
 }

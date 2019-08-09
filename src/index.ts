@@ -1,4 +1,4 @@
-import Quill from 'quill'
+import Quill, { Delta } from 'quill'
 import 'quill/assets/snow.styl'
 import './index.styl'
 import './preview.styl'
@@ -35,6 +35,25 @@ const quill = new Quill('#editor', {
           }
         },
       },
+    },
+    clipboard: {
+      matchers: [
+        [
+          Node.TEXT_NODE,
+          (node: unknown, delta: Delta) => {
+            const ops: Delta['ops'] = []
+            delta.ops!.forEach(op => {
+              if (op.insert && typeof op.insert === 'string') {
+                ops.push({
+                  insert: op.insert,
+                })
+              }
+            })
+            delta.ops = ops
+            return delta
+          },
+        ],
+      ],
     },
   },
 })

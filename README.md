@@ -79,3 +79,10 @@
      "pendingImages": [1, 2, 3] // 正在上传或上传失败的图片id数组
    }
    ```
+
+# 开发
+
+## 技术选型
+
+- `webpack` 多入口打包
+- `stylus` 因为 quill 的样式基于 stylus, 为了保证良好的兼容性, 故也选择了 stylus, 需要配合 vscode 推荐插件达到自动格式化的目的.

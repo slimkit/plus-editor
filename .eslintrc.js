@@ -10,5 +10,7 @@ module.exports = {
     project: './tsconfig.json',
     sourceType: 'module',
   },
-  rules: {},
+  rules: {
+    'no-unused-vars': 'off',
+  },
 }

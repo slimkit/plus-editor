@@ -56,12 +56,12 @@ module.exports = {
       filename: 'index.html',
       template: 'src/index.html',
       title: 'develop',
-      excludeChunks: ['preview'],
+      chunks: ['index'],
     }),
     new HtmlWebpackPlugin({
-      filename: 'textarea.html',
-      template: 'src/textarea.html',
-      excludeChunks: ['preview'],
+      filename: 'preview.html',
+      template: 'src/preview.html',
+      chunks: ['preview'],
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css',

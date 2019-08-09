@@ -957,12 +957,14 @@ body {
   z-index: 10;
   width: 100%;
   height: 42px;
+  border-width: 1px 0 0;
   background-color: #fff;
 }
 .quill-editor-wrap .ql-container {
   overflow: auto;
   padding-bottom: 54px;
   min-height: 0;
+  border: none;
 }
 .quill-editor-wrap .ql-container .ql-editor {
   height: 100%;
@@ -974,6 +976,7 @@ body {
 .ql-editor {
   padding: 12px 15px;
   height: auto;
+  font-size: 14px;
 }
 .ql-editor img {
   max-width: 100%;

@@ -1,5 +1,4 @@
-import Quill from 'quill'
-import Delta from 'quill-delta'
+import Quill, { Delta } from 'quill'
 import 'quill/assets/snow.styl'
 import './index.styl'
 import './preview.styl'

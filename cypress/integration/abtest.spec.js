@@ -58,8 +58,7 @@ describe('Rech-text editor', () => {
       })
     })
 
-    // 这个测试用例在 headless 下无法通过
-    it.skip('should be scroll to cursor position when window size change', () => {
+    it('should be scroll to cursor position when window size change', () => {
       cy.visit('/')
       cy.get('.ql-editor')
         .type('start{enter}')
@@ -78,7 +77,7 @@ describe('Rech-text editor', () => {
         el.scrollTop = 0
         cy.wait(500).then(() => {
           cy.viewport(360, 360)
-          cy.wait(10).then(() => {
+          cy.wait(100).then(() => {
             expect(el.scrollTop).to.equal(el.scrollHeight - el.clientHeight)
           })
         })

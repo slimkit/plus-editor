@@ -961,7 +961,7 @@ body {
 }
 .quill-editor-wrap .ql-container {
   overflow: auto;
-  padding-bottom: 42px;
+  padding-bottom: 54px;
   min-height: 0;
 }
 .quill-editor-wrap .ql-container .ql-editor {

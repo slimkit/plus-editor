@@ -17,12 +17,14 @@ const quill = new Quill('#editor', {
     toolbar: {
       container: '#toolbar',
       handlers: {
+        // 分隔符
         divider(this: { quill: Quill }) {
           const range = this.quill.getSelection(true)
           this.quill.insertText(range.index, '\n', 'user')
           this.quill.insertEmbed(range.index + 1, 'divider', true, 'user')
           this.quill.setSelection(range.index + 2, 0, 'silent')
         },
+        // 插入图片
         image(this: { quill: Quill }) {
           let inWebview = false
           try {
@@ -37,6 +39,7 @@ const quill = new Quill('#editor', {
       },
     },
     clipboard: {
+      // 粘贴时提取纯文本
       matchers: [
         [
           Node.TEXT_NODE,

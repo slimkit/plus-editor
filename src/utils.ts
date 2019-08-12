@@ -5,6 +5,12 @@ interface generateImageWithTextOptions {
   height: number
 }
 
+/**
+ * 图片添加水印
+ *
+ * @param imageSrc 原图片src地址
+ * @param text 需要添加的文字
+ */
 export async function generateImageWithText(
   imageSrc: string,
   text: string,

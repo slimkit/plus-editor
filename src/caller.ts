@@ -1,3 +1,9 @@
+/**
+ * 调用客户端函数的方法
+ *
+ * @param fnName 调用的方法名
+ * @param params 调用方法传参
+ */
 export function callMethod(fnName: string, params: any = undefined) {
   if (window.debug) {
     console.log('debug callMethod', fnName, params) // eslint-disable-line no-console

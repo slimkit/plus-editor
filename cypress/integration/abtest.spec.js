@@ -128,6 +128,7 @@ describe('Rech-text editor', () => {
         const expectArgs = JSON.stringify({
           html: `<h1>Hello</h1><p>world!</p><img id="quill-image-1" class="quill-image" src="${imageURL}"><p><br></p>`,
           pendingImages: [],
+          isEmpty: false,
         })
         expect(win.launcher.sendContentHTML).to.be.calledWith(expectArgs)
       })

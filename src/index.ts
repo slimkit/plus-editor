@@ -107,6 +107,7 @@ window.imageFailedReceiver = async imageId => {
 
   el.setAttribute('src', failedBase64)
 
+  /** 重新上传图片 */
   const imageReuploadeHandler = () => {
     callMethod('reuploadImage', +imageId)
     el.setAttribute('src', images[index].base64!)
@@ -128,8 +129,15 @@ window.editorSubmitReceiver = () => {
     )
   })
 
+  const hasImage = html.match(/<img/)
+  const isEmpty = !hasImage && !quill.getText().trim()
+
   try {
-    callMethod('sendContentHTML', { html, pendingImages })
+    callMethod('sendContentHTML', {
+      html,
+      pendingImages,
+      isEmpty,
+    })
   } catch (error) {
     quill.insertText(0, '通信失败' + error)
   }

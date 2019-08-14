@@ -949,4 +949,9 @@ body {
 .ql-editor img {
   max-width: 100%;
 }
+.ql-editor .quill-image {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
 

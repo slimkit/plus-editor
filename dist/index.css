@@ -969,6 +969,9 @@ body {
 .quill-editor-wrap .ql-container .ql-editor {
   height: 100%;
 }
+.quill-editor-wrap .ql-tooltip {
+  z-index: 20;
+}
 
 body {
   margin: 0;

@@ -69,6 +69,10 @@ interface UploadImage {
   src?: string
   /** 图片 base64 */
   base64?: string
+  /** 图片的宽度 */
+  width: number
+  /** 图片的高度 */
+  height: number
 }
 
 /** 上传的图片列表 */
@@ -78,10 +82,20 @@ window.imagePreviewReceiver = str => {
   const range = quill.getSelection()
   const srcList = JSON.parse(str)
   for (const item of srcList) {
-    images.push({ id: +item.id, base64: item.base64 })
+    images.push({
+      id: +item.id,
+      base64: item.base64,
+      width: item.width || 200,
+      height: item.height || 200,
+    })
     const index = (range && range.index) || 0
     quill.insertText(index, '\n', 'user')
-    quill.insertEmbed(index + 1, 'image', { id: +item.id, url: item.base64 }, 'user')
+    quill.insertEmbed(
+      index + 1,
+      'image',
+      { id: +item.id, url: item.base64, width: item.width || 200, height: item.height || 200 },
+      'user',
+    )
     quill.setSelection(index + 2, 0, 'silent')
   }
 }
@@ -122,11 +136,10 @@ window.editorSubmitReceiver = () => {
   const pendingImages: number[] = []
   images.forEach(image => {
     if (!image.src) return pendingImages.push(image.id)
-    const regex = new RegExp(`<img id="quill-image-${image.id}" class="quill-image" src="\\S+" ?>`)
-    html = html.replace(
-      regex,
-      `<img id="quill-image-${image.id}" class="quill-image" src="${image.src}">`,
+    const regex = new RegExp(
+      `<img id="quill-image-${image.id}" class="quill-image" src="\\S+"[^>]*>`,
     )
+    html = html.replace(regex, `<img class="quill-image" src="${image.src}">`)
   })
 
   const hasImage = html.match(/<img/)

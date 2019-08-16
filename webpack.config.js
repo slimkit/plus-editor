@@ -11,7 +11,9 @@ module.exports = {
     preview: './src/preview.ts',
   },
   output: {
-    filename: '[name].[hash].js',
+    filename: chunkDdata => {
+      return chunkDdata.chunk.name == 'preview' ? '[name].js' : '[name].[hash].js'
+    },
     path: path.resolve(__dirname, 'dist'),
   },
   resolve: {

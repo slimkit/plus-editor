@@ -89,14 +89,14 @@ window.imagePreviewReceiver = str => {
       height: item.height || 200,
     })
     const index = (range && range.index) || 0
-    quill.insertText(index, '\n', 'user')
+    // quill.insertText(index, '\n', 'user')
     quill.insertEmbed(
-      index + 1,
+      index,
       'image',
       { id: +item.id, url: item.base64, width: item.width || 200, height: item.height || 200 },
       'user',
     )
-    quill.setSelection(index + 2, 0, 'silent')
+    quill.setSelection(index + 1, 0, 'silent')
   }
 }
 

@@ -137,9 +137,9 @@ window.editorSubmitReceiver = () => {
   images.forEach(image => {
     if (!image.src) return pendingImages.push(image.id)
     const regex = new RegExp(
-      `<img id="quill-image-${image.id}" class="quill-image" src="\\S+"[^>]*>`,
+      `<img id="quill-image-${image.id}" class="quill-image" src="\\S+"([^>]*)>`,
     )
-    html = html.replace(regex, `<img class="quill-image" src="${image.src}">`)
+    html = html.replace(regex, `<img class="quill-image" src="${image.src}"$1>`)
   })
 
   const hasImage = html.match(/<img/)

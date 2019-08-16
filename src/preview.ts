@@ -1,5 +1,6 @@
 import 'quill/assets/snow.styl'
 import './preview.styl'
+console.log(window.document.body.offsetWidth)
 setTimeout(() => {
   const imgArr = Array.from(document.querySelectorAll('img[data-width]'))
   imgArr.forEach(element => {
@@ -8,6 +9,8 @@ setTimeout(() => {
     let newWidth: number = 0
     let newHeight: number = 0
     const el = document.querySelector('.ql-editor')!
+    console.log(el)
+    console.log(el.clientWidth)
     if (width > el.clientWidth) {
       newWidth = el.clientWidth
       newHeight = height * (el.clientWidth / width)

@@ -45,7 +45,7 @@
 
    ```js
    window.imagePreviewReceiver(
-     '[{ "id": 0, "base64": "data:image/jpeg;base64,/9j/2wCEAAgwcJCQ...", width:100, hegiht:100 }]',
+     '[{ "id": 0, "base64": "data:image/jpeg;base64,/9j/2wCEAAgwcJCQ...", width:100, height:100 }]',
    )
    ```
 

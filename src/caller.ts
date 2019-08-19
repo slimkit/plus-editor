@@ -12,10 +12,10 @@ export function callMethod(fnName: string, params: any = undefined) {
     // in Android
     if (params) window.launcher[fnName](JSON.stringify(params))
     else window.launcher[fnName]()
-  } else if (window.messageHandlers) {
+  } else if (window.MobilePhoneCall) {
     // in IOS
-    if (params) window.messageHandlers[fnName](JSON.stringify(params))
-    else window.messageHandlers[fnName]()
+    if (params) window.MobilePhoneCall[fnName](JSON.stringify(params))
+    else window.MobilePhoneCall[fnName]()
   } else if (window.top) {
     // in iframe
     window.top.postMessage({ funcName: fnName, params }, '*')

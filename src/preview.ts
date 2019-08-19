@@ -1,5 +1,6 @@
 import 'quill/assets/snow.styl'
 import './preview.styl'
+import { callMethod } from './caller'
 function computer() {
   const imgArr = Array.from(document.querySelectorAll('img[data-width]'))
   imgArr.forEach(element => {
@@ -18,6 +19,20 @@ function computer() {
     element.setAttribute('style', `width:${newWidth}px;height:${newHeight}px`)
   })
 }
+;(function() {
+  const imgList = document.querySelectorAll('img')
+  const arr: Array<object> = []
+  Array.prototype.map.call(imgList, (item, index) => {
+    arr.push({
+      src: item.src,
+      width: item.dataset.width ? item.dataset.width : 0,
+      height: item.dataset.height ? item.dataset.height : 0,
+    })
+    item.onclick = () => {
+      callMethod('clickImage', { src: item.src, arr: arr, index: index })
+    }
+  })
+})()
 computer()
 window.addEventListener('resize', () => {
   computer()

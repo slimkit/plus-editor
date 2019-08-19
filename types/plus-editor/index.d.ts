@@ -12,7 +12,7 @@ declare global {
     launcher: any
 
     /** IOS 端注入 webview 中的对象 */
-    MobilePhoneCall: any
+    webkit: any
 
     /** 接收图片预览地址的钩子 */
     imagePreviewReceiver: (src: string) => void

@@ -157,7 +157,12 @@ window.editorSubmitReceiver = () => {
 }
 
 window.addEventListener('resize', () => {
-  quill.root.scrollTop = quill.root.scrollHeight
+  const el = document.querySelector('.ql-editor')!
+  quill.root.scrollTop = quill.root.scrollHeight - el.clientHeight
+  console.log('window+++++++', window.quill)
+  console.log('quill+++++++', quill)
+  console.log('滑动的顶部+++++++', quill.root.scrollTop)
+  console.log('滑动的高度+++++++', quill.root.scrollHeight)
 })
 
 window.quill = quill

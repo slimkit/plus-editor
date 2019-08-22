@@ -972,6 +972,29 @@ body {
 .quill-editor-wrap .ql-tooltip {
   z-index: 20;
 }
+.quill-editor-wrap .ql-snow .ql-tooltip[data-mode=link]::before {
+  content: '请输入链接地址:';
+}
+.quill-editor-wrap .ql-snow .ql-tooltip.ql-editing a.ql-action::after {
+  padding-right: 0;
+  border-right: 0;
+  content: '保存';
+}
+.quill-editor-wrap .ql-snow .ql-tooltip::before {
+  margin-right: 8px;
+  content: '预览地址:';
+  line-height: 26px;
+}
+.quill-editor-wrap .ql-snow .ql-tooltip a.ql-action::after {
+  margin-left: 16px;
+  padding-right: 8px;
+  border-right: 1px solid #ccc;
+  content: '编辑';
+}
+.quill-editor-wrap .ql-snow .ql-tooltip a.ql-remove::before {
+  margin-left: 8px;
+  content: '移除';
+}
 
 body {
   margin: 0;

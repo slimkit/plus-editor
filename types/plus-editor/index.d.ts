@@ -22,5 +22,7 @@ declare global {
     imageFailedReceiver: (imageId: number) => void
     /** 接收提交请求的钩子, 会触发各端对应的提交事件 */
     editorSubmitReceiver: (src: string) => void
+    /** 接受placeholder文字提示 */
+    changePlaceholder: (text: string) => void
   }
 }

@@ -969,6 +969,15 @@ body {
 .quill-editor-wrap .ql-container .ql-editor {
   height: 100%;
 }
+.quill-editor-wrap .ql-editor.ql-blank::before {
+  position: absolute;
+  right: 15px;
+  left: 15px;
+  color: #ccc;
+  content: attr(data-placeholder);
+  font-style: normal;
+  pointer-events: none;
+}
 .quill-editor-wrap .ql-tooltip {
   z-index: 20;
 }
@@ -1002,7 +1011,9 @@ body {
 .ql-editor {
   padding: 12px 15px;
   height: auto;
+  color: #666;
   font-size: 14px;
+  line-height: 22px;
 }
 .ql-editor img {
   max-width: 100%;

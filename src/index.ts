@@ -12,7 +12,7 @@ import { generateImageWithText } from './utils'
 const quill = new Quill('#editor', {
   // debug: 'info',
   theme: 'snow',
-  placeholder: '请输入内容',
+  placeholder: '',
   modules: {
     toolbar: {
       container: '#toolbar',
@@ -108,6 +108,12 @@ window.imageUrlReceiver = str => {
   }
 }
 
+window.changePlaceholder = text => {
+  const el = document.querySelector(`.ql-editor,.ql-blank`)
+  if (el) {
+    el.setAttribute('data-placeholder', text)
+  }
+}
 window.imageFailedReceiver = async imageId => {
   const el = document.querySelector(`#quill-image-${imageId}`)
   const index = images.findIndex(image => +image.id === +imageId)

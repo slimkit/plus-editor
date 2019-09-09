@@ -34,6 +34,16 @@ body {
     }
   }
 
+  .ql-editor.ql-blank::before {
+    position: absolute;
+    right: 15px;
+    left: 15px;
+    color: rgba(204, 204, 204, 1);
+    content: attr(data-placeholder);
+    font-style: normal;
+    pointer-events: none;
+  }
+
   .ql-tooltip {
     z-index: 20;
   }

@@ -1,4 +1,5 @@
-import Quill, { Delta } from 'quill'
+import Quill from 'quill'
+import Delta from 'quill-delta'
 import 'quill/assets/snow.styl'
 import './index.styl'
 import './preview.styl'
@@ -6,11 +7,12 @@ import './preview.styl'
 // import blots
 import './blots/divider'
 import './blots/image'
+import './blots/audio'
 import { callMethod } from './caller'
 import { generateImageWithText } from './utils'
 
 const quill = new Quill('#editor', {
-  // debug: 'info',
+  debug: 'info',
   theme: 'snow',
   placeholder: '',
   modules: {
@@ -29,6 +31,29 @@ const quill = new Quill('#editor', {
           let inWebview = false
           try {
             inWebview = callMethod('chooseImage')
+          } catch (error) {
+            this.quill.insertText(0, '通信失败' + error)
+          }
+          if (!inWebview) {
+            alert('不在webview中')
+          }
+        },
+        video(this: { quill: Quill }) {
+          let inWebview = false
+          try {
+            inWebview = callMethod('chooseVideo')
+          } catch (error) {
+            this.quill.insertText(0, '通信失败' + error)
+          }
+          if (!inWebview) {
+            alert('不在webview中')
+          }
+        },
+        // 选择音频
+        audio(this: { quill: Quill }) {
+          let inWebview = false
+          try {
+            inWebview = callMethod('chooseAudio')
           } catch (error) {
             this.quill.insertText(0, '通信失败' + error)
           }

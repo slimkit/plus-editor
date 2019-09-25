@@ -947,9 +947,6 @@ body {
   color: #666;
   font-size: 14px;
 }
-.ql-editor p>strong {
-  line-height: 22px;
-}
 .ql-editor img {
   max-width: 100%;
 }

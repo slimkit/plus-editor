@@ -127,7 +127,7 @@ window.imagePreviewReceiver = str => {
     quill.insertEmbed(
       index,
       'image',
-      { id: item.id, url: item.base64, width: item.width || 200, height: item.height || 200 },
+      { id: +item.id, url: item.base64, width: item.width || 200, height: item.height || 200 },
       'user',
     )
     quill.setSelection(index + 1, 0, 'silent')

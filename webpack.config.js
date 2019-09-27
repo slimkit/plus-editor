@@ -12,7 +12,8 @@ module.exports = {
   },
   output: {
     filename: chunkDdata => {
-      return chunkDdata.chunk.name == 'preview' ? '[name].js' : '[name].[hash].js'
+      // return chunkDdata.chunk.name == 'preview' ? '[name].js' : '[name].[hash].js'
+      return '[name].js'
     },
     path: path.resolve(__dirname, 'dist'),
   },

@@ -100,9 +100,18 @@ interface UploadImage {
   height: number
 }
 
+interface UploadVideo {
+  id: number
+  src?: string
+  width: number
+  height: number
+  poster?: string
+}
+
 /** 上传的图片列表 */
 const images: UploadImage[] = []
-
+const videos: UploadVideo[] = []
+/** 收到图片后预览 */
 window.imagePreviewReceiver = str => {
   const range = quill.getSelection()
   const srcList = JSON.parse(str)
@@ -118,11 +127,36 @@ window.imagePreviewReceiver = str => {
     quill.insertEmbed(
       index,
       'image',
-      { id: +item.id, url: item.base64, width: item.width || 200, height: item.height || 200 },
+      { id: item.id, url: item.base64, width: item.width || 200, height: item.height || 200 },
       'user',
     )
     quill.setSelection(index + 1, 0, 'silent')
   }
+}
+
+window.videoPreviewReceiver = (params: UploadVideo) => {
+  const range = quill.getSelection()
+  videos.push({
+    id: +params.id,
+    src: params.src,
+    poster: params.poster || '',
+    width: params.width || 200,
+    height: params.height || 200,
+  })
+  const index = (range && range.index) || 0
+  quill.insertEmbed(
+    index,
+    'video',
+    {
+      id: +params.id,
+      src: params.src,
+      height: params.height,
+      width: params.width,
+      poster: params.poster,
+    },
+    'user',
+  )
+  quill.setSelection(index + 1, 0, 'silent')
 }
 
 window.imageUrlReceiver = str => {
@@ -195,6 +229,20 @@ window.addEventListener('resize', () => {
   console.log('滑动的顶部+++++++', quill.root.scrollTop)
   console.log('滑动的高度+++++++', quill.root.scrollHeight)
 })
+
+// 监听所有视频预览的事件，分发到各个平台
+const media = document.querySelector('.quill-video')
+const eventListener = function(e: string) {
+  if (media)
+    media.addEventListener(
+      e,
+      function() {
+        console.log(e + new Date().valueOf())
+      },
+      false,
+    )
+}
+eventListener('click')
 
 window.quill = quill
 

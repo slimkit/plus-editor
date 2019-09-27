@@ -34,6 +34,25 @@
    window.quill.root.innerHTML = '<p>我是html字符串</p>'
    ```
 
+### 视频
+
+1. 点击富文本编辑器中的图片按钮后, 向各端发起图片选择的方法 `chooseVideo()`
+
+2. 宿主端收到图片选择的通知后, 调起图片选择功能,  
+   图片选择完成后, 开始静默上传图片, 同时生成一张 base64 格式缩略图(压缩质量), 加上图片唯一标示(id)连同 base64 字符串一同发送给 webview
+
+   调用 webview 的以下方法传递预览图
+
+   ```js
+   window.videoPreviewReceiver({
+     id: 0,
+     src: 'local-file-path || newwork-file-url',
+     width: 100,
+     height: 100,
+     poster: 'video-poster-path || network-poster-url',
+   })
+   ```
+
 ### 图片
 
 1. 点击富文本编辑器中的图片按钮后, 向各端发起图片选择的方法 `chooseImage()`

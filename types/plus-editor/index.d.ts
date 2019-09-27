@@ -24,5 +24,7 @@ declare global {
     editorSubmitReceiver: (src: string) => void
     /** 接受placeholder文字提示 */
     changePlaceholder: (text: string) => void
+
+    videoPreviewReceiver: (src: any) => void
   }
 }

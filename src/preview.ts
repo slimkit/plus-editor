@@ -20,23 +20,25 @@ function computer() {
   })
 }
 function videoComputer() {
-  const imgArr = Array.from(document.querySelectorAll('video[data-width]'))
-  imgArr.forEach(element => {
+  const videoArr = Array.from(document.querySelectorAll('video[data-width]'))
+  videoArr.forEach(element => {
     const width = +element.getAttribute('data-width')!
     const height = +element.getAttribute('data-height')!
     let newWidth: number = 0
     let newHeight: number = 0
     const el = document.querySelector('.ql-editor')!
-    if (width > el.clientWidth) {
-      newWidth = el.clientWidth
-      newHeight = height * (el.clientWidth / width)
-    } else {
-      newWidth = width
-      newHeight = height
-    }
+    // 视频宽度大于预览区域宽度
+    // if (width > el.clientWidth) {
+    newWidth = el.clientWidth
+    newHeight = width < height ? newWidth : height * (el.clientWidth / width)
+    // } else {
+    //   newWidth = width
+    //   newHeight = height
+    // }
     element.setAttribute('style', `width:${newWidth}px;height:${newHeight}px`)
   })
 }
+
 ;(function() {
   const imgList = document.querySelectorAll('img')
   const arr: Array<object> = []

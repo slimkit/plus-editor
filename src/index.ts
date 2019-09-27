@@ -111,6 +111,7 @@ interface UploadVideo {
 /** 上传的图片列表 */
 const images: UploadImage[] = []
 const videos: UploadVideo[] = []
+console.log(window)
 /** 收到图片后预览 */
 window.imagePreviewReceiver = str => {
   const range = quill.getSelection()
@@ -158,6 +159,10 @@ window.videoPreviewReceiver = (params: UploadVideo) => {
     'user',
   )
   quill.setSelection(index + 1, 0, 'silent')
+}
+
+window.videoUrlReceiver = (params: UploadVideo) => {
+  videos[videos.findIndex(v => v.id === +params.id)].src = params.src
 }
 
 window.imageUrlReceiver = str => {
@@ -232,18 +237,18 @@ window.addEventListener('resize', () => {
 })
 
 // 监听所有视频预览的事件，分发到各个平台
-const media = document.querySelector('.quill-video')
-const eventListener = function(e: string) {
-  if (media)
-    media.addEventListener(
-      e,
-      function() {
-        console.log(e + new Date().valueOf())
-      },
-      false,
-    )
-}
-eventListener('click')
+// const media = document.querySelector('.quill-video')
+// const eventListener = function(e: string) {
+//   if (media)
+//     media.addEventListener(
+//       e,
+//       function() {
+//         console.log(e + new Date().valueOf())
+//       },
+//       false,
+//     )
+// }
+// eventListener('click')
 
 window.quill = quill
 

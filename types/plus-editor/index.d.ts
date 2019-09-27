@@ -26,5 +26,6 @@ declare global {
     changePlaceholder: (text: string) => void
 
     videoPreviewReceiver: (src: any) => void
+    videoUrlReceiver: (params: any) => void
   }
 }

@@ -136,7 +136,7 @@ window.imagePreviewReceiver = str => {
 }
 
 window.videoPreviewReceiver = (params: UploadVideo) => {
-  console.log(params)
+  console.log(params, typeof params)
   const range = quill.getSelection()
   videos.push({
     id: +params.id,

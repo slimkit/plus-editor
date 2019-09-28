@@ -53,6 +53,16 @@
    })
    ```
 
+3. 待视频上传完毕后, 将视频网络地址连同刚才的唯一标识(id)再次发送给 webview
+
+   调用 webview 的以下方法传递上传后的视频, 编辑器会在提交时进行替换
+
+   ```js
+   window.videoUrlReceiver(
+     '{ "id": 0, "src": "https://tsplus.zhibocloud.cn/storage/public:MjAxOC8xMi8yNC9FNnJUUGNUWWsyNTBwYkxQcXE3LmpwZWc=", "poster": "network-poster-url" }',
+   )
+   ```
+
 ### 图片
 
 1. 点击富文本编辑器中的图片按钮后, 向各端发起图片选择的方法 `chooseImage()`

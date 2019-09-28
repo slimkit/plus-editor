@@ -25,7 +25,7 @@ declare global {
     /** 接受placeholder文字提示 */
     changePlaceholder: (text: string) => void
 
-    videoPreviewReceiver: (src: any) => void
-    videoUrlReceiver: (params: any) => void
+    videoPreviewReceiver: (src: string) => void
+    videoUrlReceiver: (src: string) => void
   }
 }

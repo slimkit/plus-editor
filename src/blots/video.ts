@@ -8,7 +8,6 @@ class VideoBlot extends BlockEmbed {
     src: string
     width: number
     height: number
-    localPath?: string
     poster?: string
   }) {
     const node = super.create()
@@ -16,7 +15,16 @@ class VideoBlot extends BlockEmbed {
     node.setAttribute('class', 'quill-video')
     node.setAttribute('src', value.src)
     node.setAttribute('poster', value.poster)
-    //在实际插入图片标签之前计算图片的等比宽高
+    node.addEventListener(
+      'click',
+      (e: any) => {
+        e.target.paused ? e.target.play() : e.target.pause()
+        e.stopPropagation()
+      },
+      false,
+    )
+    // node.setAttribute('controls', 'controls')
+    //在实际插入标签之前计算图片的等比宽高
     node.setAttribute('data-width', `${value.width}`)
     node.setAttribute('data-height', `${value.height}`)
     return node
@@ -24,13 +32,12 @@ class VideoBlot extends BlockEmbed {
 
   static value(node: Element) {
     return {
-      id: node.getAttribute('alt'),
       url: node.getAttribute('src'),
     }
   }
 }
 
-VideoBlot.blotName = 'image'
-VideoBlot.tagName = 'img'
+VideoBlot.blotName = 'video'
+VideoBlot.tagName = 'video'
 
 Quill.register(VideoBlot)

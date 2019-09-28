@@ -16,11 +16,12 @@ function computer() {
       newWidth = width
       newHeight = height
     }
+    window.alert(newWidth)
     element.setAttribute('style', `width:${newWidth}px;height:${newHeight}px`)
   })
 }
 function videoComputer() {
-  const videoArr = Array.from(document.querySelectorAll('video[data-width]'))
+  const videoArr = Array.from(document.querySelectorAll('.quill-video'))
   videoArr.forEach(element => {
     const width = +element.getAttribute('data-width')!
     const height = +element.getAttribute('data-height')!
@@ -30,12 +31,13 @@ function videoComputer() {
     // 视频宽度大于预览区域宽度
     // if (width > el.clientWidth) {
     newWidth = el.clientWidth
-    newHeight = width < height ? newWidth : height * (el.clientWidth / width)
+    newHeight = newWidth < height ? newWidth : height
     // } else {
     //   newWidth = width
     //   newHeight = height
     // }
-    element.setAttribute('style', `width:${newWidth}px;height:${newHeight}px`)
+    element.setAttribute('width', `${newWidth}px`)
+    element.setAttribute('height', `${newHeight}px`)
   })
 }
 
@@ -54,6 +56,7 @@ function videoComputer() {
   })
 })()
 computer()
+alert('init')
 videoComputer()
 window.addEventListener('resize', () => {
   computer()

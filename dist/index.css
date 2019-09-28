@@ -1017,7 +1017,17 @@ body {
 .ql-editor img {
   max-width: 100%;
 }
-.ql-editor .quill-image {
+.ql-editor video {
+  max-width: 100%;
+}
+.ql-editor video:before {
+  content: '';
+  width: 20vw;
+  height: 20vw;
+  background-color: #f00;
+}
+.ql-editor .quill-image,
+.ql-editor .quill-video {
   display: block;
   margin: auto;
 }

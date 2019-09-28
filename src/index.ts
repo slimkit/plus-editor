@@ -8,11 +8,12 @@ import './preview.styl'
 import './blots/divider'
 import './blots/image'
 import './blots/audio'
+import './blots/video'
 import { callMethod } from './caller'
 import { generateImageWithText } from './utils'
 
 const quill = new Quill('#editor', {
-  debug: 'info',
+  debug: false,
   theme: 'snow',
   placeholder: '',
   modules: {
@@ -26,6 +27,7 @@ const quill = new Quill('#editor', {
           this.quill.insertEmbed(range.index + 1, 'divider', true, 'user')
           this.quill.setSelection(range.index + 2, 0, 'silent')
         },
+
         // 插入图片
         image(this: { quill: Quill }) {
           let inWebview = false
@@ -111,7 +113,6 @@ interface UploadVideo {
 /** 上传的图片列表 */
 const images: UploadImage[] = []
 const videos: UploadVideo[] = []
-console.log(window)
 /** 收到图片后预览 */
 window.imagePreviewReceiver = str => {
   const range = quill.getSelection()
@@ -135,8 +136,8 @@ window.imagePreviewReceiver = str => {
   }
 }
 
-window.videoPreviewReceiver = (params: UploadVideo) => {
-  console.log(params, typeof params)
+window.videoPreviewReceiver = (data: string) => {
+  const params = JSON.parse(data)
   const range = quill.getSelection()
   videos.push({
     id: +params.id,
@@ -161,7 +162,8 @@ window.videoPreviewReceiver = (params: UploadVideo) => {
   quill.setSelection(index + 1, 0, 'silent')
 }
 
-window.videoUrlReceiver = (params: UploadVideo) => {
+window.videoUrlReceiver = (str: string) => {
+  const params: UploadVideo = JSON.parse(str)
   videos[videos.findIndex(v => v.id === +params.id)].src = params.src
 }
 
@@ -228,27 +230,13 @@ window.editorSubmitReceiver = () => {
 }
 
 window.addEventListener('resize', () => {
-  const el = document.querySelector('.ql-editor')!
-  quill.root.scrollTop = quill.root.scrollHeight - el.clientHeight
-  console.log('window+++++++', window.quill)
-  console.log('quill+++++++', quill)
-  console.log('滑动的顶部+++++++', quill.root.scrollTop)
-  console.log('滑动的高度+++++++', quill.root.scrollHeight)
+  // const el = document.querySelector('.ql-editor')!
+  // quill.root.scrollTop = quill.root.scrollHeight - el.clientHeight
+  // console.log('window+++++++', window.quill)
+  // console.log('quill+++++++', quill)
+  // console.log('滑动的顶部+++++++', quill.root.scrollTop)
+  // console.log('滑动的高度+++++++', quill.root.scrollHeight)
 })
-
-// 监听所有视频预览的事件，分发到各个平台
-// const media = document.querySelector('.quill-video')
-// const eventListener = function(e: string) {
-//   if (media)
-//     media.addEventListener(
-//       e,
-//       function() {
-//         console.log(e + new Date().valueOf())
-//       },
-//       false,
-//     )
-// }
-// eventListener('click')
 
 window.quill = quill
 

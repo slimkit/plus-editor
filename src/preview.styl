@@ -13,7 +13,17 @@ body {
 		max-width: 100%;
 	}
 
-	.quill-image {
+	video {
+		max-width: 100%;
+		&:before {
+			content: '';
+			width: 20vw;
+			height 20vw;
+			background-color: red;	
+		}
+	}
+
+	.quill-image, .quill-video {
 		display: block;
 		margin: auto;
 	}

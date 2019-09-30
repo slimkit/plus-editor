@@ -27,5 +27,6 @@ declare global {
 
     videoPreviewReceiver: (src: string) => void
     videoUrlReceiver: (src: string) => void
+    videoFailedReceiver: (id: number) => void
   }
 }

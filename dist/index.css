@@ -1017,18 +1017,34 @@ body {
 .ql-editor img {
   max-width: 100%;
 }
-.ql-editor video {
+.ql-editor .video-container {
+  position: relative;
+  width: 100%;
+}
+.ql-editor .video-container video {
   max-width: 100%;
 }
-.ql-editor video:before {
-  content: '';
-  width: 20vw;
-  height: 20vw;
+.ql-editor .video-container .uploadFail {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: 24px;
+  padding: 5px;
+  font-size: 12px;
+  line-height: 1;
   background-color: #f00;
+  color: #fff;
+  z-index: 1000;
 }
 .ql-editor .quill-image,
 .ql-editor .quill-video {
   display: block;
   margin: auto;
+}
+.ql-editor .show {
+  display: block;
+}
+.ql-editor .hidden {
+  display: none;
 }
 

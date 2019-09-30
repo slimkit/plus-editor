@@ -164,7 +164,14 @@ window.videoPreviewReceiver = (data: string) => {
 
 window.videoUrlReceiver = (str: string) => {
   const params: UploadVideo = JSON.parse(str)
-  videos[videos.findIndex(v => v.id === +params.id)].src = params.src
+  const index = videos.findIndex(v => v.id === +params.id)
+  if (index >= 0) {
+    videos[index].src = params.src
+    const container = document.querySelector(`#video-notice-${params.id}`)
+    if (container) {
+      container.setAttribute('class', 'hidden uploadFail')
+    }
+  }
 }
 
 window.imageUrlReceiver = str => {
@@ -181,6 +188,23 @@ window.changePlaceholder = text => {
     el.setAttribute('data-placeholder', text)
   }
 }
+window.videoFailedReceiver = videoId => {
+  const container = document.querySelector(`#video-notice-${videoId}`)
+  const index = videos.findIndex(v => v.id === +videoId)
+  if (index === -1 || !container) {
+    if (window.debug) console.log(`video ${videoId} not exists!`)
+    return
+  }
+  if (container) {
+    container.setAttribute('class', 'show uploadFail')
+  }
+  const videoReuploadHandler = (e: any) => {
+    callMethod('reuploadVideo', +videoId)
+    e.stopPropagation()
+  }
+  container.addEventListener('click', videoReuploadHandler, { once: true })
+}
+
 window.imageFailedReceiver = async imageId => {
   const el = document.querySelector(`#quill-image-${imageId}`)
   const index = images.findIndex(image => +image.id === +imageId)

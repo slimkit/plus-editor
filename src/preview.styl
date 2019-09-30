@@ -12,19 +12,36 @@ body {
 	img {
 		max-width: 100%;
 	}
-
-	video {
-		max-width: 100%;
-		&:before {
-			content: '';
-			width: 20vw;
-			height 20vw;
-			background-color: red;	
-		}
+	.video-container {
+		position: relative;
+		width: 100%;
+		
 	}
+	.video-container video {
+		max-width: 100%;
+	}
+	.video-container .uploadFail {
+		position: absolute;	
+		right: 0;
+		bottom: 0;
+		height 24px;
+		padding: 5px;
+		font-size: 12px;
+		line-height: 1;
+		background-color: red;
+		color: #fff;
+		z-index: 1000;
+	}
+	
 
 	.quill-image, .quill-video {
 		display: block;
 		margin: auto;
+	}
+	.show {
+		display: block;
+	}
+	.hidden {
+		display: none;
 	}
 }

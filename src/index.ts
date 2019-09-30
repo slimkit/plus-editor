@@ -37,7 +37,7 @@ const quill = new Quill('#editor', {
             this.quill.insertText(0, '通信失败' + error)
           }
           if (!inWebview) {
-            alert('不在webview中')
+            // alert('不在webview中')
           }
         },
         video(this: { quill: Quill }) {
@@ -48,7 +48,7 @@ const quill = new Quill('#editor', {
             this.quill.insertText(0, '通信失败' + error)
           }
           if (!inWebview) {
-            alert('不在webview中')
+            // alert('不在webview中')
           }
         },
         // 选择音频
@@ -60,7 +60,7 @@ const quill = new Quill('#editor', {
             this.quill.insertText(0, '通信失败' + error)
           }
           if (!inWebview) {
-            alert('不在webview中')
+            // alert('不在webview中')
           }
         },
       },

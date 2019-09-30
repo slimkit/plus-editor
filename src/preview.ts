@@ -16,7 +16,7 @@ function computer() {
       newWidth = width
       newHeight = height
     }
-    window.alert(newWidth)
+    // window.alert(newWidth)
     element.setAttribute('style', `width:${newWidth}px;height:${newHeight}px`)
   })
 }
@@ -56,7 +56,7 @@ function videoComputer() {
   })
 })()
 computer()
-alert('init')
+// alert('init')
 videoComputer()
 window.addEventListener('resize', () => {
   computer()

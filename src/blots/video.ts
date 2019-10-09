@@ -21,6 +21,7 @@ class VideoBlot extends BlockEmbed {
       (e: any) => {
         e.target.paused ? e.target.play() : e.target.pause()
         e.stopPropagation()
+        e.preventDefault()
       },
       false,
     )

@@ -30,7 +30,9 @@ const quill = new Quill('#editor', {
 
         // 插入图片
         image(this: { quill: Quill }) {
-          console.log('quill.hasFocus = ', quill.hasFocus())
+          if (quill.hasFocus()) {
+            quill.blur()
+          }
           let inWebview = false
           try {
             inWebview = callMethod('chooseImage')
@@ -42,7 +44,9 @@ const quill = new Quill('#editor', {
           }
         },
         video(this: { quill: Quill }) {
-          console.log('quill.hasFocus = ', quill.hasFocus())
+          if (quill.hasFocus()) {
+            quill.blur()
+          }
           let inWebview = false
           try {
             inWebview = callMethod('chooseVideo')
@@ -55,6 +59,9 @@ const quill = new Quill('#editor', {
         },
         // 选择音频
         audio(this: { quill: Quill }) {
+          if (quill.hasFocus()) {
+            quill.blur()
+          }
           let inWebview = false
           try {
             inWebview = callMethod('chooseAudio')

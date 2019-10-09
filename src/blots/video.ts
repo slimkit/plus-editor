@@ -16,16 +16,13 @@ class VideoBlot extends BlockEmbed {
     videoNode.setAttribute('class', 'quill-video')
     videoNode.setAttribute('src', value.src)
     videoNode.setAttribute('poster', value.poster)
-    videoNode.addEventListener(
-      'click',
-      (e: any) => {
-        e.target.paused ? e.target.play() : e.target.pause()
-        e.stopPropagation()
-        e.preventDefault()
-      },
-      false,
-    )
-    // node.setAttribute('controls', 'controls')
+    videoNode.setAttribute('controls', 'controls')
+    videoNode.addEventListener('click', (e: any) => {
+      // e.target.paused ? e.target.play() : e.target.pause()
+      e.stopPropagation()
+      e.preventDefault()
+      console.log('click new video')
+    })
     //在实际插入标签之前计算图片的等比宽高
     videoNode.setAttribute('data-width', `${value.width}`)
     videoNode.setAttribute('data-height', `${value.height}`)

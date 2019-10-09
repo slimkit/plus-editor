@@ -271,6 +271,14 @@ window.addEventListener('resize', () => {
   // console.log('滑动的高度+++++++', quill.root.scrollHeight)
 })
 
+window.addEventListener('load', () => {
+  const videos = document.querySelectorAll('video.quill-video')
+  console.log(videos.length)
+  videos.forEach(() => {
+    console.log('click old videos')
+  })
+})
+
 window.quill = quill
 
 export default quill

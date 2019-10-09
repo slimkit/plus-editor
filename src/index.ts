@@ -30,7 +30,7 @@ const quill = new Quill('#editor', {
 
         // 插入图片
         image(this: { quill: Quill }) {
-          console.log('quill.hasFocus = ', quill.hasFocus)
+          console.log('quill.hasFocus = ', quill.hasFocus())
           let inWebview = false
           try {
             inWebview = callMethod('chooseImage')
@@ -42,7 +42,7 @@ const quill = new Quill('#editor', {
           }
         },
         video(this: { quill: Quill }) {
-          console.log('quill.hasFocus = ', quill.hasFocus)
+          console.log('quill.hasFocus = ', quill.hasFocus())
           let inWebview = false
           try {
             inWebview = callMethod('chooseVideo')

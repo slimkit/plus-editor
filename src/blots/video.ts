@@ -3,7 +3,14 @@ import Quill from 'quill'
 const BlockEmbed = Quill.import('blots/block/embed')
 
 class VideoBlot extends BlockEmbed {
-  static create(value: { id: number; src: string; width: number; height: number; poster: string }) {
+  static create(value: {
+    quill: Quill
+    id: number
+    src: string
+    width: number
+    height: number
+    poster: string
+  }) {
     const node = super.create()
     node.setAttribute('class', 'video-container')
     node.setAttribute('id', `video-container-${value.id}`)
@@ -17,11 +24,9 @@ class VideoBlot extends BlockEmbed {
     videoNode.setAttribute('src', value.src)
     videoNode.setAttribute('poster', value.poster)
     videoNode.setAttribute('controls', 'controls')
-    videoNode.addEventListener('click', (e: any) => {
-      // e.target.paused ? e.target.play() : e.target.pause()
-      e.stopPropagation()
-      e.preventDefault()
-      console.log('click new video')
+    videoNode.addEventListener('click', () => {
+      console.log(value.quill.hasFocus())
+      value.quill.blur()
     })
     //在实际插入标签之前计算图片的等比宽高
     videoNode.setAttribute('data-width', `${value.width}`)

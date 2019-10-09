@@ -160,6 +160,7 @@ window.videoPreviewReceiver = (data: string) => {
     index,
     'video',
     {
+      quill,
       id: +params.id,
       src: params.src,
       height: params.height,

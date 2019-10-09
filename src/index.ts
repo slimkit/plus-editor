@@ -124,8 +124,7 @@ const images: UploadImage[] = []
 const videos: UploadVideo[] = []
 /** 收到图片后预览 */
 window.imagePreviewReceiver = str => {
-  const range = quill.getSelection()
-  console.log(range, quill.getSelection(true))
+  const range = quill.getSelection(true)
   const srcList = JSON.parse(str)
   for (const item of srcList) {
     images.push({
@@ -148,7 +147,7 @@ window.imagePreviewReceiver = str => {
 
 window.videoPreviewReceiver = (data: string) => {
   const params = JSON.parse(data)
-  const range = quill.getSelection()
+  const range = quill.getSelection(true)
   videos.push({
     id: +params.id,
     src: params.src,

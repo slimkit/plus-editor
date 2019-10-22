@@ -962,12 +962,163 @@ body {
 }
 .quill-editor-wrap .ql-container {
   overflow: auto;
-  padding-bottom: 54px;
+  padding-bottom: 43px;
   min-height: 0;
   border: none;
 }
 .quill-editor-wrap .ql-container .ql-editor {
   height: 100%;
+  white-space: pre-wrap;
+}
+.quill-editor-wrap .ql-container .ql-editor .image-container {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.quill-editor-wrap .ql-container .ql-editor .image-container .image-wrap {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+}
+.quill-editor-wrap .ql-container .ql-editor .image-container .image-wrap .image {
+  max-width: 100%;
+}
+.quill-editor-wrap .ql-container .ql-editor .image-container .image-wrap .progress-bar {
+  top: 0;
+  left: 0;
+  z-index: 1;
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  overflow: hidden;
+  background-color: rgba(89,182,215,0.3);
+}
+.quill-editor-wrap .ql-container .ql-editor .image-container .image-wrap .progress-bar .progress {
+  width: 0;
+  height: 3px;
+  transition: width 300ms;
+  background-color: #59b6d7;
+}
+.quill-editor-wrap .ql-container .ql-editor .image-container .image-wrap .remove,
+.quill-editor-wrap .ql-container .ql-editor .image-container .image-wrap .error {
+  position: absolute;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.quill-editor-wrap .ql-container .ql-editor .image-container .image-wrap .remove {
+  top: 4px;
+  right: 4px;
+  z-index: 3;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #fff;
+}
+.quill-editor-wrap .ql-container .ql-editor .image-container .image-wrap .remove:before {
+  width: 20px;
+  height: 20px;
+  content: "✕";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(0,0,0,0.3);
+}
+.quill-editor-wrap .ql-container .ql-editor .image-container .image-wrap .error {
+  top: 0;
+  right: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  color: #f4504d;
+  font-size: 12px;
+  line-height: 20px;
+  flex-direction: column;
+  background-color: rgba(0,0,0,0.6);
+  visibility: hidden;
+}
+.quill-editor-wrap .ql-container .ql-editor .image-container.fail .progress-bar {
+  visibility: hidden;
+}
+.quill-editor-wrap .ql-container .ql-editor .image-container.fail .error {
+  visibility: visible;
+}
+.quill-editor-wrap .ql-container .ql-editor .video-container {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.quill-editor-wrap .ql-container .ql-editor .video-container .progress-bar {
+  top: 0;
+  left: 0;
+  z-index: 1;
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  overflow: hidden;
+  background-color: rgba(89,182,215,0.3);
+}
+.quill-editor-wrap .ql-container .ql-editor .video-container .progress-bar .progress {
+  width: 0;
+  height: 3px;
+  transition: width 300ms;
+  background-color: #59b6d7;
+}
+.quill-editor-wrap .ql-container .ql-editor .video-container .remove,
+.quill-editor-wrap .ql-container .ql-editor .video-container .error {
+  position: absolute;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.quill-editor-wrap .ql-container .ql-editor .video-container .remove {
+  top: 4px;
+  right: 4px;
+  z-index: 3;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #fff;
+}
+.quill-editor-wrap .ql-container .ql-editor .video-container .remove:before {
+  width: 20px;
+  height: 20px;
+  content: "✕";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(0,0,0,0.3);
+}
+.quill-editor-wrap .ql-container .ql-editor .video-container .error {
+  top: 0;
+  right: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  color: #f4504d;
+  font-size: 12px;
+  line-height: 20px;
+  flex-direction: column;
+  background-color: rgba(0,0,0,0.6);
+  visibility: hidden;
+}
+.quill-editor-wrap .ql-container .ql-editor .video-container.fail .progress-bar {
+  visibility: hidden;
+}
+.quill-editor-wrap .ql-container .ql-editor .video-container.fail .error {
+  visibility: visible;
 }
 .quill-editor-wrap .ql-editor.ql-blank::before {
   position: absolute;
@@ -1005,46 +1156,51 @@ body {
   content: '移除';
 }
 
+html,
 body {
   margin: 0;
 }
 .ql-editor {
-  padding: 12px 15px;
-  height: auto;
+  padding: 15px;
   color: #666;
   font-size: 14px;
+  line-height: 24px;
+  white-space: normal;
+}
+.ql-editor a {
+  color: #59b6d7;
+  text-decoration: underline;
+}
+.ql-editor h1 {
+  font-size: 18px;
+  line-height: 28px;
 }
 .ql-editor img {
-  max-width: 100%;
-}
-.ql-editor .video-container {
-  position: relative;
-  width: 100%;
-}
-.ql-editor .video-container video {
-  max-width: 100%;
-}
-.ql-editor .video-container .uploadFail {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  height: 24px;
-  padding: 5px;
-  font-size: 12px;
-  line-height: 1;
-  background-color: #f00;
-  color: #fff;
-  z-index: 1000;
-}
-.ql-editor .quill-image,
-.ql-editor .quill-video {
-  display: block;
   margin: auto;
-}
-.ql-editor .show {
   display: block;
+  max-width: 100%;
 }
-.ql-editor .hidden {
-  display: none;
+.ql-editor video {
+  margin: auto;
+  display: block;
+  width: 100%;
+  max-height: width;
+  background-color: #000;
+}
+.ql-editor > p,
+.ql-editor > h1,
+.ql-editor > img,
+.ql-editor > video,
+.ql-editor > div,
+.ql-editor > section {
+  margin-bottom: 12px;
+}
+.ql-editor > blockquote {
+  margin: 0 0 12px 0 !important;
+  border-left: 2px solid #ccc !important;
+  padding-left: 12px !important;
+}
+.ql-editor > *:last-child {
+  margin-bottom: 0 !important;
 }
 

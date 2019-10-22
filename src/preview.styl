@@ -1,47 +1,50 @@
 // 这里的样式也会影响到移动端的展示, 谨慎修改
-body {
+html, body {
 	margin: 0;
 }
 
 .ql-editor {
-	padding: 12px 15px;
-	height: auto;
-	color: rgba(102, 102, 102, 1);
+	padding: 15px;
+	color: #666666;
 	font-size: 14px;
+	line-height: 24px;
+	white-space: normal;
+
+	a {
+		color: rgb(89, 182, 215);
+		text-decoration: underline;
+	}
+
+	h1 {
+		font-size: 18px;
+		line-height: 28px;
+	}
 
 	img {
-		max-width: 100%;
-	}
-	.video-container {
-		position: relative;
-		width: 100%;
-		
-	}
-	.video-container video {
-		max-width: 100%;
-	}
-	.video-container .uploadFail {
-		position: absolute;	
-		right: 0;
-		bottom: 0;
-		height 24px;
-		padding: 5px;
-		font-size: 12px;
-		line-height: 1;
-		background-color: red;
-		color: #fff;
-		z-index: 1000;
-	}
-	
-
-	.quill-image, .quill-video {
-		display: block;
 		margin: auto;
-	}
-	.show {
 		display: block;
+		max-width: 100%;
 	}
-	.hidden {
-		display: none;
+
+	video {
+		margin: auto;
+		display: block;
+		width: 100%;
+		max-height: width;
+		background-color: #000;
+	}
+
+	& > p, & > h1, & > img, & > video, & > div, & > section {
+		margin-bottom: 12px;
+	}
+
+	& > blockquote {
+		margin: 0 0 12px 0 !important;
+		border-left: 2px solid #ccc !important;
+		padding-left: 12px !important;
+	}
+
+	& > *:last-child{
+		margin-bottom: 0 !important;
 	}
 }

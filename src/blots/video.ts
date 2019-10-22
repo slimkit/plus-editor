@@ -1,47 +1,263 @@
 import Quill from 'quill'
+import EventEmitter from 'eventemitter3'
 
 const BlockEmbed = Quill.import('blots/block/embed')
 
-class VideoBlot extends BlockEmbed {
-  static create(value: {
-    quill: Quill
-    id: number
-    src: string
-    width: number
-    height: number
-    poster: string
-  }) {
-    const node = super.create()
-    node.setAttribute('class', 'video-container')
-    node.setAttribute('id', `video-container-${value.id}`)
-    const videoNode = document.createElement('video')
-    const uploadFail = document.createElement('span')
-    uploadFail.setAttribute('id', `video-notice-${value.id}`)
-    uploadFail.innerText = '上传失败,点此重传'
-    uploadFail.setAttribute('class', 'uploadFail hidden')
-    videoNode.setAttribute('id', `quill-video-${value.id}`)
-    videoNode.setAttribute('class', 'quill-video')
-    videoNode.setAttribute('src', value.src)
-    videoNode.setAttribute('poster', value.poster)
-    videoNode.setAttribute('controls', 'controls')
-    videoNode.addEventListener('click', () => {
-      console.log(value.quill.hasFocus())
-      value.quill.blur()
+interface VideoBlotValue {
+  id?: string
+  src: string
+  poster: string
+  width?: number
+  height?: number
+}
+
+export class VideoBlot extends BlockEmbed {
+  static tagName = 'div'
+  static blotName = 'video'
+  static className = 'video-container'
+
+  static quill: Quill
+  static eventEmitter = new EventEmitter()
+  static uploadStatus: { [key: string]: any } = {}
+
+  constructor(node: HTMLDivElement) {
+    super(node)
+
+    node.addEventListener('click', (e: Event) => {
+      if (VideoBlot.quill.hasFocus()) {
+        VideoBlot.quill.blur()
+      }
     })
-    //在实际插入标签之前计算图片的等比宽高
-    videoNode.setAttribute('data-width', `${value.width}`)
-    videoNode.setAttribute('data-height', `${value.height}`)
-    node.appendChild(videoNode)
-    node.appendChild(uploadFail)
+
+    const {
+      video,
+      value: { id, src, width, height },
+    } = VideoBlot.getVideoAndValue(node)
+
+    if (id) {
+      node.classList.add(`video-${id}`)
+
+      const status = VideoBlot.uploadStatus[id]
+      if (status) {
+        VideoBlot.eventEmitter.emit('reinsert', {
+          id,
+          status: status.status || 'UPLOADING',
+        })
+      } else {
+        VideoBlot.uploadStatus[id] = {}
+      }
+    }
+
+    if (video && src) {
+      if (id && !node.querySelector('.progress-bar')) {
+        const div = VideoBlot.createDiv('progress-bar')
+        div.appendChild(VideoBlot.createDiv('progress'))
+        node.appendChild(div)
+      }
+
+      if (id && !node.querySelector('.error')) {
+        const div = VideoBlot.createDiv('error')
+        div.addEventListener('click', () => {
+          VideoBlot.uploadStatus[id] = {}
+          this.domNode.classList.remove('fail')
+          VideoBlot.eventEmitter.emit('reupload', { id })
+        })
+        node.appendChild(div)
+      }
+
+      if (!node.querySelector('.remove')) {
+        const div = VideoBlot.createDiv('remove')
+        div.addEventListener('click', () => {
+          this.remove()
+        })
+        node.appendChild(div)
+      }
+
+      if (id) VideoBlot.refreshUpload(id)
+    }
+  }
+
+  static refreshUpload(id: string) {
+    const { status, progress, error, src, poster } = VideoBlot.uploadStatus[id] || {}
+
+    if (status === 'UPLOADING') {
+      VideoBlot.updateUploadProgress(id, progress)
+    } else if (status === 'SUCCESS') {
+      VideoBlot.setUploadSuccess(id, src, poster)
+    } else if (status === 'ERROR') {
+      VideoBlot.setUploadError(id, error)
+    }
+  }
+
+  static updateUploadProgress(id: string, progress: number) {
+    if ((VideoBlot.uploadStatus[id] || {}).status === 'SUCCESS') return
+
+    VideoBlot.uploadStatus[id] = { status: 'UPLOADING', progress: Math.round(progress) }
+
+    document.querySelectorAll<HTMLDivElement>(`div.video-${id}`).forEach(node => {
+      node.classList.remove('fail')
+
+      node.querySelector<HTMLDivElement>('div.progress')!.style.width = `${Math.round(progress)}%`
+    })
+  }
+
+  static setUploadError(id: string, error?: string) {
+    if ((VideoBlot.uploadStatus[id] || {}).status === 'SUCCESS') return
+
+    VideoBlot.uploadStatus[id] = { status: 'ERROR', error }
+
+    document.querySelectorAll<HTMLDivElement>(`div.video-${id}`).forEach(node => {
+      if (!node.classList.contains('fail')) node.classList.add('fail')
+
+      const div = node.querySelector<HTMLDivElement>('div.error')
+
+      if (div) {
+        let html = '<span>上传失败，点击重试</span>'
+        if (error) {
+          html += `<span>${error}</span>`
+        }
+
+        div.innerHTML = html
+      }
+    })
+  }
+
+  static setUploadSuccess(id: string, src: string, poster: string) {
+    VideoBlot.uploadStatus[id] = { status: 'SUCCESS', src }
+
+    document.querySelectorAll<HTMLDivElement>(`div.video-${id}`).forEach(node => {
+      node.querySelector<HTMLDivElement>('div.progress-bar')!.remove()
+      node.querySelector<HTMLDivElement>('div.error')!.remove()
+
+      const video = node.querySelector<HTMLVideoElement>('video')
+
+      if (video) {
+        // video.setAttribute('src', src) 将导致图片闪动
+        video.dataset.src = src
+        video.dataset.poster = poster
+      }
+
+      node.classList.remove(`video-${id}`)
+    })
+  }
+
+  static createDiv(...classNames: string[]) {
+    const div = document.createElement('div')
+
+    div.setAttribute('contenteditable', 'false')
+
+    if (classNames.length > 0) {
+      div.classList.add(...classNames)
+    }
+
+    return div
+  }
+
+  static create(value: VideoBlotValue) {
+    const node = super.create()
+    node.setAttribute('contenteditable', 'false')
+
+    const video = document.createElement('video')
+
+    if (value.id) {
+      video.dataset.id = value.id
+    }
+
+    if (value.width && value.height) {
+      video.dataset.width = `${value.width}`
+      video.dataset.height = `${value.height}`
+    } else {
+      video.dataset.width = '0'
+      video.dataset.height = '0'
+    }
+
+    video.setAttribute('src', value.src)
+    video.setAttribute('poster', value.poster)
+
+    node.appendChild(video)
+
     return node
   }
 
-  static value(node: Element) {
-    return node.getAttribute('src')
+  static getVideoAndValue(node: HTMLDivElement | HTMLVideoElement) {
+    const video =
+      node.tagName.toUpperCase() === 'VIDEO'
+        ? (node as HTMLVideoElement)
+        : node.querySelector<HTMLVideoElement>('video')
+
+    const value: VideoBlotValue = {
+      src: (video && video.getAttribute('src')) || '',
+      poster: (video && video.getAttribute('poster')) || '',
+    }
+
+    if (video) {
+      if (video.dataset.id) {
+        value.id = video.dataset.id
+      }
+
+      const width = Number(video.dataset.width)
+      const height = Number(video.dataset.height)
+
+      if (width && height) {
+        value.width = width
+        value.height = height
+      }
+    }
+
+    return { video, value }
+  }
+
+  static value(node: HTMLDivElement | HTMLVideoElement) {
+    return VideoBlot.getVideoAndValue(node).value
+  }
+
+  remove() {
+    const { id } = VideoBlot.value(this.domNode)
+
+    if (id) {
+      const status = VideoBlot.uploadStatus[id]
+
+      VideoBlot.eventEmitter.emit('remove', {
+        id,
+        status: status.status || 'UPLOADING',
+      })
+    }
+
+    super.remove()
+  }
+
+  static pendingVideos() {
+    return Object.keys(VideoBlot.uploadStatus).filter(id => {
+      return VideoBlot.uploadStatus[id]!.status !== 'SUCCESS'
+    })
+  }
+
+  static buildHtml(node: HTMLDivElement) {
+    node.querySelectorAll('div.video-container').forEach(el => {
+      const video = el.querySelector<HTMLImageElement>('video')
+      if (video && (!video.dataset.id || video.dataset.src)) {
+        if (video.dataset.src) {
+          video.setAttribute('src', video.dataset.src)
+          delete video.dataset.src
+        }
+
+        if (video.dataset.poster) {
+          video.setAttribute('poster', video.dataset.poster)
+          delete video.dataset.poster
+        }
+
+        delete video.dataset.id
+        video.removeAttribute('class')
+        video.removeAttribute('style')
+
+        el.parentNode!.insertBefore(video, el.nextSibling)
+      }
+
+      el.remove()
+    })
+
+    return node
   }
 }
-
-VideoBlot.blotName = 'video'
-VideoBlot.tagName = 'section'
 
 Quill.register(VideoBlot)

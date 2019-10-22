@@ -25,12 +25,212 @@ body {
 
   .ql-container {
     overflow: auto;
-    padding-bottom: 42 + 12px;
+    padding-bottom: 42 + 1px;
     min-height: 0;
     border: none;
 
     .ql-editor {
       height: 100%;
+      white-space: pre-wrap;
+
+      	.image-container {
+          width: 100%;
+          position: relative;
+
+          display: flex;
+          align-items: flex-start;
+          justify-content: center;
+
+          .image-wrap {
+            display: flex;
+            align-items: flex-start;
+
+            position: relative;
+
+            .image {
+              max-width: 100%;
+            }
+
+            .progress-bar {
+              top: 0;
+              left: 0;
+              z-index: 1;
+              position: absolute;
+
+              width: 100%;
+              height: 3px;
+              overflow: hidden;
+
+              background-color: rgba(89, 182, 215, .3);
+
+              .progress {
+                width: 0;
+                height: 3px;
+                transition: width 300ms;
+                background-color: rgb(89, 182, 215);
+              }
+            }
+
+            .remove, .error {
+              position: absolute;
+
+              user-select: none;
+
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+
+            .remove {
+              top: 4px;
+              right: 4px;
+              z-index: 3;
+
+              width: 32px;
+              height: 32px;
+
+              cursor: pointer;
+
+              font-size: 12px;
+              color: #ffffff;
+
+              &:before {
+                width: 20px;
+                height: 20px;
+                content: "✕";
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                border-radius: 50%;
+                background-color: rgba(0, 0, 0, .3);
+              }
+            }
+
+            .error {
+              top: 0;
+              right: 0;
+              z-index: 2;
+
+              width: 100%;
+              height: 100%;
+              overflow: hidden;
+
+              color: #F4504D;
+              font-size: 12px;
+              line-height: 20px;
+
+              flex-direction: column;
+
+              background-color: rgba(0, 0, 0, .6);
+
+              visibility: hidden;
+            }
+          }
+
+          &.fail {
+            .progress-bar {
+              visibility: hidden;
+            }
+            .error {
+              visibility: visible;
+            }
+          }
+        }
+
+        .video-container {
+          width: 100%;
+          position: relative;
+
+          display: flex;
+          align-items: flex-start;
+          justify-content: center;
+
+          .progress-bar {
+            top: 0;
+            left: 0;
+            z-index: 1;
+            position: absolute;
+
+            width: 100%;
+            height: 3px;
+            overflow: hidden;
+
+            background-color: rgba(89, 182, 215, .3);
+
+            .progress {
+              width: 0;
+              height: 3px;
+              transition: width 300ms;
+              background-color: rgb(89, 182, 215);
+            }
+          }
+
+          .remove, .error {
+            position: absolute;
+
+            user-select: none;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .remove {
+            top: 4px;
+            right: 4px;
+            z-index: 3;
+
+            width: 32px;
+            height: 32px;
+
+            cursor: pointer;
+
+            font-size: 12px;
+            color: #ffffff;
+
+            &:before {
+              width: 20px;
+              height: 20px;
+              content: "✕";
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              border-radius: 50%;
+              background-color: rgba(0, 0, 0, .3);
+            }
+          }
+
+          .error {
+            top: 0;
+            right: 0;
+            z-index: 2;
+
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+
+            color: #F4504D;
+            font-size: 12px;
+            line-height: 20px;
+
+            flex-direction: column;
+
+            background-color: rgba(0, 0, 0, .6);
+
+            visibility: hidden;
+          }
+
+          &.fail {
+            .progress-bar {
+              visibility: hidden;
+            }
+            .error {
+              visibility: visible;
+            }
+          }
+        }
     }
   }
 

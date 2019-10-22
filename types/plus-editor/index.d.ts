@@ -14,19 +14,28 @@ declare global {
     /** IOS 端注入 webview 中的对象 */
     webkit: any
 
-    /** 接收图片预览地址的钩子 */
-    imagePreviewReceiver: (src: string) => void
-    /** 接收图片实际地址的钩子 */
-    imageUrlReceiver: (src: string) => void
-    /** 接收图片上传失败的钩子 */
-    imageFailedReceiver: (imageId: number) => void
-    /** 接收提交请求的钩子, 会触发各端对应的提交事件 */
-    editorSubmitReceiver: (src: string) => void
-    /** 接受placeholder文字提示 */
-    changePlaceholder: (text: string) => void
+    /**
+     * 设置HTML内容
+     */
+    setContentReceiver: (data: string) => void
 
-    videoPreviewReceiver: (src: string) => void
-    videoUrlReceiver: (src: string) => void
-    videoFailedReceiver: (id: number) => void
+    /** 接收图片预览地址的钩子 */
+    imagePreviewReceiver: (data: string) => void
+    /** 接收图片实际上传进度的钩子 */
+    imageProgressReceiver: (data: string) => void
+    /** 接收图片实际地址的钩子 */
+    imageUrlReceiver: (data: string) => void
+    /** 接收图片上传失败的钩子 */
+    imageFailedReceiver: (data: string) => void
+
+    videoPreviewReceiver: (data: string) => void
+    videoProgressReceiver: (data: string) => void
+    videoUrlReceiver: (data: string) => void
+    videoFailedReceiver: (data: string) => void
+
+    /** 接收提交请求的钩子, 会触发各端对应的提交事件 */
+    editorSubmitReceiver: (data: string) => void
+    /** 接受placeholder文字提示 */
+    changePlaceholder: (data: string) => void
   }
 }

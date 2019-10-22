@@ -938,46 +938,51 @@
   border: 1px solid #ccc;
 }
 
+html,
 body {
   margin: 0;
 }
 .ql-editor {
-  padding: 12px 15px;
-  height: auto;
+  padding: 15px;
   color: #666;
   font-size: 14px;
+  line-height: 24px;
+  white-space: normal;
+}
+.ql-editor a {
+  color: #59b6d7;
+  text-decoration: underline;
+}
+.ql-editor h1 {
+  font-size: 18px;
+  line-height: 28px;
 }
 .ql-editor img {
-  max-width: 100%;
-}
-.ql-editor .video-container {
-  position: relative;
-  width: 100%;
-}
-.ql-editor .video-container video {
-  max-width: 100%;
-}
-.ql-editor .video-container .uploadFail {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  height: 24px;
-  padding: 5px;
-  font-size: 12px;
-  line-height: 1;
-  background-color: #f00;
-  color: #fff;
-  z-index: 1000;
-}
-.ql-editor .quill-image,
-.ql-editor .quill-video {
-  display: block;
   margin: auto;
-}
-.ql-editor .show {
   display: block;
+  max-width: 100%;
 }
-.ql-editor .hidden {
-  display: none;
+.ql-editor video {
+  margin: auto;
+  display: block;
+  width: 100%;
+  max-height: width;
+  background-color: #000;
+}
+.ql-editor > p,
+.ql-editor > h1,
+.ql-editor > img,
+.ql-editor > video,
+.ql-editor > div,
+.ql-editor > section {
+  margin-bottom: 12px;
+}
+.ql-editor > blockquote {
+  margin: 0 0 12px 0 !important;
+  border-left: 2px solid #ccc !important;
+  padding-left: 12px !important;
+}
+.ql-editor > *:last-child {
+  margin-bottom: 0 !important;
 }
 

@@ -1,4 +1,4 @@
-import Quill from 'quill'
+import Quill, { RangeStatic } from 'quill'
 import Delta from 'quill-delta'
 import 'quill/assets/snow.styl'
 import './index.styl'
@@ -6,16 +6,20 @@ import './preview.styl'
 
 // import blots
 import './blots/divider'
-import './blots/image'
-import './blots/audio'
-import './blots/video'
+import { ImageBlot } from './blots/image'
+import { VideoBlot } from './blots/video'
 import { callMethod } from './caller'
-import { generateImageWithText } from './utils'
+import { fixImageSize, fixVideoSize, fixSize } from './common'
 
+const Header = Quill.import('formats/header')
+Header.tagName = ['H1']
+
+let quillSelection: RangeStatic
 const quill = new Quill('#editor', {
   debug: false,
   theme: 'snow',
   placeholder: '',
+  formats: ['bold', 'header', 'blockquote', 'link', 'image', 'video'],
   modules: {
     toolbar: {
       container: '#toolbar',
@@ -30,53 +34,69 @@ const quill = new Quill('#editor', {
 
         // 插入图片
         image(this: { quill: Quill }) {
-          if (quill.hasFocus()) {
-            quill.blur()
-          }
-          let inWebview = false
-          try {
-            inWebview = callMethod('chooseImage')
-          } catch (error) {
-            this.quill.insertText(0, '通信失败' + error)
-          }
-          if (!inWebview) {
-            alert('不在webview中')
+          quillSelection = quill.getSelection(true)
+
+          quill.blur()
+
+          if (!callMethod('chooseImage')) {
+            console.log('chooseImage')
           }
         },
+
         video(this: { quill: Quill }) {
-          if (quill.hasFocus()) {
-            quill.blur()
-          }
-          let inWebview = false
-          try {
-            inWebview = callMethod('chooseVideo')
-          } catch (error) {
-            this.quill.insertText(0, '通信失败' + error)
-          }
-          if (!inWebview) {
-            alert('不在webview中')
+          quillSelection = quill.getSelection(true)
+
+          quill.blur()
+
+          if (!callMethod('chooseVideo')) {
+            console.log('chooseVideo')
+            window.videoPreviewReceiver(
+              JSON.stringify({
+                url: 'http://www.topmiao.com/Uploads/Download/2018/0814/5b7275aba9ccf.mp4',
+                poster: 'http://www.topmiao.com/Uploads/Picture/2018/0814/5b7275aa820fa.png',
+              }),
+            )
           }
         },
-        // 选择音频
-        audio(this: { quill: Quill }) {
-          if (quill.hasFocus()) {
-            quill.blur()
-          }
-          let inWebview = false
-          try {
-            inWebview = callMethod('chooseAudio')
-          } catch (error) {
-            this.quill.insertText(0, '通信失败' + error)
-          }
-          if (!inWebview) {
-            alert('不在webview中')
-          }
+
+        undo(this: { quill: Quill }) {
+          // @ts-ignore
+          quill.history!.undo()
+        },
+
+        redo(this: { quill: Quill }) {
+          // @ts-ignore
+          quill.history!.redo()
         },
       },
     },
     clipboard: {
-      // 粘贴时提取纯文本
       matchers: [
+        [
+          'IMG',
+          (node: HTMLImageElement, delta: Delta): Delta => {
+            const src = node.getAttribute('src')
+
+            delta.forEach((op: any) => {
+              if (op.insert && op.insert.image === src) {
+                op.insert = { image: ImageBlot.value(node) }
+              }
+            })
+
+            return delta
+          },
+        ],
+
+        [
+          'VIDEO',
+          (node: HTMLVideoElement, delta: Delta): Delta => {
+            return delta.delete(delta.length()).insert({
+              video: VideoBlot.value(node),
+            })
+          },
+        ],
+
+        // 粘贴时提取纯文本
         [
           Node.TEXT_NODE,
           (node: Element, delta: Delta): Delta => {
@@ -97,99 +117,134 @@ const quill = new Quill('#editor', {
   },
 })
 
-/** 上传的图片 */
-interface UploadImage {
-  /** 图片标识 */
-  id: number
-  /** 图片地址 */
-  src?: string
-  /** 图片 base64 */
-  base64?: string
-  /** 图片的宽度 */
-  width: number
-  /** 图片的高度 */
-  height: number
+/** 设置编辑器内容 */
+window.setContentReceiver = data => {
+  quill.clipboard.dangerouslyPasteHTML(data)
+
+  fixSize()
 }
 
-interface UploadVideo {
-  id: number
-  src?: string
-  width: number
-  height: number
-  poster?: string
-}
+ImageBlot.quill = quill
 
-/** 上传的图片列表 */
-const images: UploadImage[] = []
-const videos: UploadVideo[] = []
+ImageBlot.eventEmitter.on('remove', data => {
+  if (!callMethod('removeImage', data)) {
+    console.log('removeImage', data)
+  }
+})
+
+ImageBlot.eventEmitter.on('reinsert', data => {
+  if (!callMethod('reinsertImage', data)) {
+    console.log('reinsertImage', data)
+  }
+})
+
+ImageBlot.eventEmitter.on('reupload', data => {
+  if (!callMethod('reuploadImage', data)) {
+    console.log('reuploadImage', data)
+  }
+})
+
 /** 收到图片后预览 */
-window.imagePreviewReceiver = str => {
-  const range = quill.getSelection(true)
-  const srcList = JSON.parse(str)
+window.imagePreviewReceiver = data => {
+  const srcList = JSON.parse(data)
+  let { index } = quillSelection
+
   for (const item of srcList) {
-    images.push({
-      id: +item.id,
-      base64: item.base64,
-      width: item.width || 200,
-      height: item.height || 200,
-    })
-    const index = (range && range.index) || 0
-    // quill.insertText(index, '\n', 'user')
     quill.insertEmbed(
-      index,
+      index++,
       'image',
-      { id: +item.id, url: item.base64, width: item.width || 200, height: item.height || 200 },
+      {
+        id: `${item.id || ''}`,
+        src: `${item.url}`,
+        width: +item.width,
+        height: +item.height,
+      },
       'user',
     )
-    quill.setSelection(index + 1, 0, 'silent')
   }
+
+  fixImageSize()
 }
 
-window.videoPreviewReceiver = (data: string) => {
-  const params = JSON.parse(data)
-  const range = quill.getSelection(true)
-  videos.push({
-    id: +params.id,
-    src: params.src,
-    poster: params.poster || '',
-    width: params.width || 200,
-    height: params.height || 200,
-  })
-  const index = (range && range.index) || 0
+/** 更新图片上传进度 */
+window.imageProgressReceiver = (data: string) => {
+  const { id, progress } = JSON.parse(data) || {}
+  ImageBlot.updateUploadProgress(`${id}`, Number(progress))
+}
+
+/** 设置图片上传成功 */
+window.imageUrlReceiver = (data: string) => {
+  const { id, url } = JSON.parse(data) || {}
+
+  ImageBlot.setUploadSuccess(`${id}`, `${url}`)
+}
+
+/** 设置图片上传失败 */
+window.imageFailedReceiver = (data: string) => {
+  const { id, error } = JSON.parse(data) || {}
+
+  ImageBlot.setUploadError(`${id}`, `${error || ''}`)
+}
+
+VideoBlot.quill = quill
+
+VideoBlot.eventEmitter.on('remove', data => {
+  if (!callMethod('removeVideo', data)) {
+    console.log('removeVideo', data)
+  }
+})
+
+VideoBlot.eventEmitter.on('reinsert', data => {
+  if (!callMethod('reinsertVideo', data)) {
+    console.log('reinsertVideo', data)
+  }
+})
+
+VideoBlot.eventEmitter.on('reupload', data => {
+  if (!callMethod('reuploadVideo', data)) {
+    console.log('reuploadVideo', data)
+  }
+})
+
+/** 收到视频后预览 */
+window.videoPreviewReceiver = data => {
+  const item = JSON.parse(data)
+  let { index } = quillSelection
+
   quill.insertEmbed(
-    index,
+    index++,
     'video',
     {
-      quill,
-      id: +params.id,
-      src: params.src,
-      height: params.height,
-      width: params.width,
-      poster: params.poster,
+      id: `${item.id || ''}`,
+      src: `${item.url}`,
+      poster: `${item.poster}`,
+      width: +item.width,
+      height: +item.height,
     },
     'user',
   )
-  quill.setSelection(index + 1, 0, 'silent')
+
+  fixVideoSize()
 }
 
-window.videoUrlReceiver = (str: string) => {
-  const params: UploadVideo = JSON.parse(str)
-  const index = videos.findIndex(v => v.id === +params.id)
-  if (index >= 0) {
-    videos[index].src = params.src
-    const container = document.querySelector(`#video-notice-${params.id}`)
-    if (container) {
-      container.setAttribute('class', 'hidden uploadFail')
-    }
-  }
+/** 更新视频上传进度 */
+window.videoProgressReceiver = (data: string) => {
+  const { id, progress } = JSON.parse(data) || {}
+  VideoBlot.updateUploadProgress(`${id}`, Number(progress))
 }
 
-window.imageUrlReceiver = str => {
-  const urlList = JSON.parse(str) || []
-  for (const item of urlList) {
-    const index = images.findIndex(image => image.id === +item.id)
-    if (index >= 0) images[index].src = item.url
-  }
+/** 设置视频上传成功 */
+window.videoUrlReceiver = (data: string) => {
+  const { id, url, poster } = JSON.parse(data) || {}
+
+  VideoBlot.setUploadSuccess(`${id}`, `${url}`, `${poster}`)
+}
+
+/** 设置视频上传失败 */
+window.videoFailedReceiver = (data: string) => {
+  const { id, error } = JSON.parse(data) || {}
+
+  VideoBlot.setUploadError(`${id}`, `${error || ''}`)
 }
 
 window.changePlaceholder = text => {
@@ -198,88 +253,35 @@ window.changePlaceholder = text => {
     el.setAttribute('data-placeholder', text)
   }
 }
-window.videoFailedReceiver = videoId => {
-  const container = document.querySelector(`#video-notice-${videoId}`)
-  const index = videos.findIndex(v => v.id === +videoId)
-  if (index === -1 || !container) {
-    if (window.debug) console.log(`video ${videoId} not exists!`)
-    return
-  }
-  if (container) {
-    container.setAttribute('class', 'show uploadFail')
-  }
-  const videoReuploadHandler = (e: any) => {
-    callMethod('reuploadVideo', +videoId)
-    e.stopPropagation()
-  }
-  container.addEventListener('click', videoReuploadHandler, { once: true })
-}
-
-window.imageFailedReceiver = async imageId => {
-  const el = document.querySelector(`#quill-image-${imageId}`)
-  const index = images.findIndex(image => +image.id === +imageId)
-  if (index <= -1 || !el) {
-    if (window.debug) console.log(`image ${imageId} not exist!`) // eslint-disable-line no-console
-    return
-  }
-  const image = images[index]
-
-  const failedBase64 = await generateImageWithText(image.base64!, '上传失败')
-
-  el.setAttribute('src', failedBase64)
-
-  /** 重新上传图片 */
-  const imageReuploadeHandler = () => {
-    callMethod('reuploadImage', +imageId)
-    el.setAttribute('src', images[index].base64!)
-  }
-  el.addEventListener('click', imageReuploadeHandler, { once: true })
-}
 
 window.editorSubmitReceiver = () => {
   let html = quill.root.innerHTML
+  let div: HTMLDivElement | null
+  div = document.createElement('div')
+  div.innerHTML = html
 
-  /** 未上传完毕的图片 */
-  const pendingImages: number[] = []
-  images.forEach(image => {
-    if (!image.src) return pendingImages.push(image.id)
-    const regex = new RegExp(
-      `<img id="quill-image-${image.id}" class="quill-image" src="\\S+"([^>]*)>`,
-    )
-    html = html.replace(regex, `<img class="quill-image" src="${image.src}"$1>`)
-  })
+  div = VideoBlot.buildHtml(ImageBlot.buildHtml(div))
 
-  const hasImage = html.match(/<img/)
-  const isEmpty = !hasImage && !quill.getText().trim()
+  const isEmpty = !(quill.getText() || div!.querySelector('video,img'))
+  const pendingImages = ImageBlot.pendingImages()
+  const pendingVideos = VideoBlot.pendingVideos()
 
-  try {
-    callMethod('sendContentHTML', {
-      html,
-      pendingImages,
-      isEmpty,
-    })
-  } catch (error) {
-    quill.insertText(0, '通信失败' + error)
+  html = div!.innerHTML
+  div = null
+
+  if (!callMethod('sendContentHTML', { html, pendingImages, pendingVideos, isEmpty })) {
+    console.log('sendContentHTML', { html, pendingImages, pendingVideos, isEmpty })
   }
 }
 
-window.addEventListener('resize', () => {
-  // const el = document.querySelector('.ql-editor')!
-  // quill.root.scrollTop = quill.root.scrollHeight - el.clientHeight
-  // console.log('window+++++++', window.quill)
-  // console.log('quill+++++++', quill)
-  // console.log('滑动的顶部+++++++', quill.root.scrollTop)
-  // console.log('滑动的高度+++++++', quill.root.scrollHeight)
-})
-
-window.addEventListener('load', () => {
-  const videos = document.querySelectorAll('video.quill-video')
-  console.log(videos.length)
-  videos.forEach(() => {
-    console.log('click old videos')
-  })
-})
-
 window.quill = quill
+
+window.addEventListener('resize', () => {
+  const range = quill.getSelection()
+
+  if (range && quill.hasFocus()) {
+    quill.setSelection(range)
+  }
+})
 
 export default quill

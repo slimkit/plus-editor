@@ -31,80 +31,92 @@
 1. 客户端向编辑器插入内容调用 webview 以下内容
 
    ```js
-   window.quill.root.innerHTML = '<p>我是html字符串</p>'
+   window.setContentReceiver('<p>我是html字符串</p>')
    ```
 
 ### 视频
 
-1. 点击富文本编辑器中的图片按钮后, 向各端发起图片选择的方法 `chooseVideo()`
+1. 点击富文本编辑器中的视频按钮后, 向各端发起视频选择的方法 `chooseVideo()`
 
 2. 宿主端收到视频选择的通知后, 调起视频选择功能,  
-   视频选择完成后, 开始静默上传视频, 同时将本地的视频地址, 视频封面地址, 加上图片唯一标示(id)连同 视频高宽封装为对象一同发送给 webview
+   视频选择完成后, 开始静默上传视频, 同时将视频预览地址, 加上视频唯一标示(id)一同发送给 webview
 
-   调用 webview 的以下方法传递预览
+   调用 webview 的以下方法传递预览图
 
    ```js
-   window.videoPreviewReceiver({
-     id: 0,
-     src: 'local-file-path || newwork-file-url',
-     width: 100,
-     height: 100,
-     poster: 'video-poster-path || network-poster-url',
-   })
+   window.videoPreviewReceiver(
+     '[{ "id": "unique-id", "url": "local-file-path", "poster": "local-file-path", width:100, height:100 }]',
+   )
    ```
 
-3. 待视频上传完毕后, 将视频网络地址连同刚才的唯一标识(id)再次发送给 webview
+3. 上传视频过程中，设置视频上传进度
+
+   ```js
+   window.videoProgressReceiver('{ "id": "unique-id", "progress": 15 }')
+   ```
+
+4. 待视频上传完毕后, 将视频网络地址连同刚才的唯一标识(id)再次发送给 webview
 
    调用 webview 的以下方法传递上传后的视频, 编辑器会在提交时进行替换
 
    ```js
    window.videoUrlReceiver(
-     '{ "id": 0, "src": "https://tsplus.zhibocloud.cn/storage/public:MjAxOC8xMi8yNC9FNnJUUGNUWWsyNTBwYkxQcXE3LmpwZWc=", "poster": "network-poster-url" }',
+     '{ "id": "unique-id", "url": "newwork-file-url", "poster": "newwork-file-url" }',
    )
    ```
 
-4. 视频上传失败后, 各端调用 webview 的以下方法通知 webview 在 id 为 1 的图片上显示上传失败的提示
+5. 视频上传失败后, 各端调用 webview 的以下方法通知 webview 在指定 id 的视频上显示上传失败的提示，其中 error 参数不是必填的
 
    ```js
-   window.videoFailedReceiver('1')
+   window.videoFailedReceiver('{"id":"unique-id", "error":"错误原因"}')
    ```
 
-5. 用户点击上传失败的视频时, 会调用各端的 reuploadVideo("1") 方法通知重传,
-   重传失败时重复第 4 步, 重传成功重复第 3 步.
+6. 用户点击上传失败的视频时，会调用各端的 `reuploadVideo('{"id":"unique-id"}')` 方法通知重传，重传失败时重复第 5 步，重传成功重复第 4 步.
+
+7. 用户删除视频时，调用各端`removeVideo('{"id":"unique-id", "status":"UPLOADING"}')`，其中 status 的值有 UPLOADING|ERROR|SUCCESS 分别表示 上传中|上传失败|上传成功，通常上传失败和成功不需要处理
+
+8. 当编辑器插入 id 重复的视频时（例如删除后撤销删除），将调用各端`reinsertVideo('{"id":"unique-id", "status":"UPLOADING"}')`，其中 status 的值有 UPLOADING|ERROR|SUCCESS 分别表示 上传中|上传失败|上传成功，通常上传失败和成功不需要处理
 
 ### 图片
 
 1. 点击富文本编辑器中的图片按钮后, 向各端发起图片选择的方法 `chooseImage()`
 
 2. 宿主端收到图片选择的通知后, 调起图片选择功能,  
-   图片选择完成后, 开始静默上传图片, 同时生成一张 base64 格式缩略图(压缩质量), 加上图片唯一标示(id)连同 base64 字符串一同发送给 webview
+   图片选择完成后, 开始静默上传图片, 同时将图片预览地址, 加上图片唯一标示(id)一同发送给 webview
 
    调用 webview 的以下方法传递预览图
 
    ```js
    window.imagePreviewReceiver(
-     '[{ "id": 0, "base64": "data:image/jpeg;base64,/9j/2wCEAAgwcJCQ...", width:100, height:100 }]',
+     '[{ "id": "unique-id", "url": "local-file-path", width:100, height:100 }]',
    )
    ```
 
-3. 待图片上传完毕后, 将图片网络地址连同刚才的唯一标识(id)再次发送给 webview
+3. 上传图片过程中，设置图片上传进度
+
+   ```js
+   window.imageProgressReceiver('{ "id": "unique-id", "progress": 15 }')
+   ```
+
+4. 待图片上传完毕后, 将图片网络地址连同刚才的唯一标识(id)再次发送给 webview
 
    调用 webview 的以下方法传递上传后的图片, 编辑器会在提交时进行替换
 
    ```js
-   window.imageUrlReceiver(
-     '[{ "id": 0, "url": "https://tsplus.zhibocloud.cn/storage/public:MjAxOC8xMi8yNC9FNnJUUGNUWWsyNTBwYkxQcXE3LmpwZWc=" }]',
-   )
+   window.imageUrlReceiver('{ "id": "unique-id", "url": "newwork-file-url" }')
    ```
 
-4. 图片上传失败后, 各端调用 webview 的以下方法通知 webview 在 id 为 1 的图片上显示上传失败的提示
+5. 图片上传失败后, 各端调用 webview 的以下方法通知 webview 在指定 id 的图片上显示上传失败的提示，其中 error 参数不是必填的
 
    ```js
-   window.imageFailedReceiver('1')
+   window.imageFailedReceiver('{"id":"unique-id", "error":"错误原因"}')
    ```
 
-5. 用户点击上传失败的图片时, 会调用各端的 `reuploadImage("1")` 方法通知重传,  
-   重传失败时重复第 4 步, 重传成功重复第 3 步.
+6. 用户点击上传失败的图片时，会调用各端的 `reuploadImage('{"id":"unique-id"}')` 方法通知重传，重传失败时重复第 5 步，重传成功重复第 4 步.
+
+7. 用户删除图片时，调用各端`removeImage('{"id":"unique-id", "status":"UPLOADING"}')`，其中 status 的值有 UPLOADING|ERROR|SUCCESS 分别表示 上传中|上传失败|上传成功，通常上传失败和成功不需要处理
+
+8. 当编辑器插入 id 重复的图片时（例如删除后撤销删除），将调用各端`reinsertImage('{"id":"unique-id", "status":"UPLOADING"}')`，其中 status 的值有 UPLOADING|ERROR|SUCCESS 分别表示 上传中|上传失败|上传成功，通常上传失败和成功不需要处理
 
 ### 提交
 
@@ -118,8 +130,9 @@
 
    ```json
    {
-     "html": "<h1>我是html字符串</h1><p><img src=\"https://xxx.png\"></p>",
-     "pendingImages": [1, 2, 3] // 正在上传或上传失败的图片id数组
+     "html": "<h1>我是html字符串</h1><img src=\"https://xxx.png\">",
+     "pendingImages": ["1", "2", "3"], // 正在上传或上传失败的图片id数组
+     "pendingVideos": ["1", "2", "3"] // 正在上传或上传失败的视频id数组
    }
    ```
 

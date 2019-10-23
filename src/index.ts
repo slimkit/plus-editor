@@ -50,12 +50,6 @@ const quill = new Quill('#editor', {
 
           if (!callMethod('chooseVideo')) {
             console.log('chooseVideo')
-            window.videoPreviewReceiver(
-              JSON.stringify({
-                url: 'http://www.topmiao.com/Uploads/Download/2018/0814/5b7275aba9ccf.mp4',
-                poster: 'http://www.topmiao.com/Uploads/Picture/2018/0814/5b7275aa820fa.png',
-              }),
-            )
           }
         },
 

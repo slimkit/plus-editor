@@ -37,5 +37,7 @@ declare global {
     editorSubmitReceiver: (data: string) => void
     /** 接受placeholder文字提示 */
     changePlaceholder: (data: string) => void
+
+    pageHiddenReceiver: (data?: string) => void
   }
 }

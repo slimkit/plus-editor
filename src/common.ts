@@ -60,10 +60,10 @@ export function fixVideoSize() {
     .querySelectorAll('video')
     .forEach(video => {
       video.setAttribute('controls', '')
+      video.setAttribute('preload', 'auto')
       video.setAttribute('webkit-playsinline', '')
       video.setAttribute('playsinline', '')
       video.setAttribute('x5-playsinline', '')
-      video.setAttribute('preload', 'metadata')
       video.setAttribute('controlsList', 'nodownload')
       video.removeAttribute('autopaly')
       video.removeAttribute('loop')

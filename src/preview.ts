@@ -8,6 +8,10 @@ window.addEventListener('resize', fixSize)
 const onReady = () => {
   fixSize()
 
+  callMethod('docReady', {
+    docHeight: document.body.offsetHeight,
+  })
+
   const view = getViewElement()
 
   if (!view) {
@@ -41,4 +45,12 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', onReady)
 } else {
   onReady()
+}
+
+window.pageHiddenReceiver = (data?: string) => {
+  getViewElement()!
+    .querySelectorAll('video')
+    .forEach(video => {
+      video.pause()
+    })
 }

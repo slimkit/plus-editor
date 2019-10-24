@@ -11,10 +11,12 @@ export function callMethod(fnName: string, params: any = undefined) {
 
   if (window.launcher) {
     // in Android
-    if (params) {
-      window.launcher[fnName](JSON.stringify(params))
-    } else {
-      window.launcher[fnName]()
+    if (typeof window.launcher[fnName] === 'function') {
+      if (params) {
+        window.launcher[fnName](JSON.stringify(params))
+      } else {
+        window.launcher[fnName]()
+      }
     }
   } else if (window.webkit && window.webkit.messageHandlers) {
     // in IOS

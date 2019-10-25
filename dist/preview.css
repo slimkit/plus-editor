@@ -942,6 +942,9 @@ html,
 body {
   margin: 0;
 }
+video::-webkit-media-controls-enclosure {
+  display: none;
+}
 .ql-editor {
   padding: 15px;
   color: #666;

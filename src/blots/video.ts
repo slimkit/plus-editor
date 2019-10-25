@@ -78,15 +78,17 @@ export class VideoBlot extends BlockEmbed {
   }
 
   static refreshUpload(id: string) {
-    const { status, progress, error, src, poster } = VideoBlot.uploadStatus[id] || {}
+    setTimeout(() => {
+      const { status, progress, error, src, poster } = VideoBlot.uploadStatus[id] || {}
 
-    if (status === 'UPLOADING') {
-      VideoBlot.updateUploadProgress(id, progress)
-    } else if (status === 'SUCCESS') {
-      VideoBlot.setUploadSuccess(id, src, poster)
-    } else if (status === 'ERROR') {
-      VideoBlot.setUploadError(id, error)
-    }
+      if (status === 'UPLOADING') {
+        VideoBlot.updateUploadProgress(id, progress)
+      } else if (status === 'SUCCESS') {
+        VideoBlot.setUploadSuccess(id, src, poster)
+      } else if (status === 'ERROR') {
+        VideoBlot.setUploadError(id, error)
+      }
+    }, 0)
   }
 
   static updateUploadProgress(id: string, progress: number) {

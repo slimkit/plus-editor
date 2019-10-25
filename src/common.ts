@@ -47,10 +47,10 @@ export function fixImageSize() {
 
 function onPalyVideo(e: Event) {
   getViewElement()!
-    .querySelectorAll('video')
-    .forEach(video => {
-      if (video !== e.target) {
-        video.pause()
+    .querySelectorAll<HTMLMediaElement>('video,audio')
+    .forEach(media => {
+      if (media !== e.target) {
+        media.pause()
       }
     })
 }
@@ -88,6 +88,12 @@ export function fixVideoSize() {
       video.style.width = `${width}px`
       video.style.height = `${height}px`
     })
+}
+
+window.pageHiddenReceiver = (data?: string) => {
+  document.querySelectorAll<HTMLMediaElement>('video,audio').forEach(media => {
+    media.pause()
+  })
 }
 
 export function fixSize() {

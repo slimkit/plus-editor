@@ -46,11 +46,3 @@ if (document.readyState === 'loading') {
 } else {
   onReady()
 }
-
-window.pageHiddenReceiver = (data?: string) => {
-  getViewElement()!
-    .querySelectorAll('video')
-    .forEach(video => {
-      video.pause()
-    })
-}

@@ -115,7 +115,7 @@ const quill = new Quill('#editor', {
 window.setContentReceiver = data => {
   quill.clipboard.dangerouslyPasteHTML(data)
 
-  fixSize()
+  setTimeout(fixSize, 0)
 }
 
 ImageBlot.quill = quill
@@ -157,7 +157,7 @@ window.imagePreviewReceiver = data => {
     )
   }
 
-  fixImageSize()
+  setTimeout(fixImageSize, 0)
 }
 
 /** 更新图片上传进度 */
@@ -218,7 +218,7 @@ window.videoPreviewReceiver = data => {
     'user',
   )
 
-  fixVideoSize()
+  setTimeout(fixVideoSize, 0)
 }
 
 /** 更新视频上传进度 */

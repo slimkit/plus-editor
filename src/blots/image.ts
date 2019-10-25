@@ -98,15 +98,17 @@ export class ImageBlot extends BlockEmbed {
   }
 
   static refreshUpload(id: string) {
-    const { status, progress, error, src } = ImageBlot.uploadStatus[id] || {}
+    setTimeout(() => {
+      const { status, progress, error, src } = ImageBlot.uploadStatus[id] || {}
 
-    if (status === 'UPLOADING') {
-      ImageBlot.updateUploadProgress(id, progress)
-    } else if (status === 'SUCCESS') {
-      ImageBlot.setUploadSuccess(id, src)
-    } else if (status === 'ERROR') {
-      ImageBlot.setUploadError(id, error)
-    }
+      if (status === 'UPLOADING') {
+        ImageBlot.updateUploadProgress(id, progress)
+      } else if (status === 'SUCCESS') {
+        ImageBlot.setUploadSuccess(id, src)
+      } else if (status === 'ERROR') {
+        ImageBlot.setUploadError(id, error)
+      }
+    }, 0)
   }
 
   static updateUploadProgress(id: string, progress: number) {

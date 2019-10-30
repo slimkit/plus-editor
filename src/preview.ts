@@ -11,14 +11,14 @@ interface DocSize {
 const docSize: DocSize = { width: 0, height: 0 }
 
 function setDocSize() {
-  if (window.innerWidth && window.innerHeight) {
-    const width = document.body.offsetWidth
-    const height = document.body.offsetHeight
+  const width = document.body.offsetWidth
+  const height = document.body.offsetHeight
 
-    if (docSize.width !== width || docSize.height !== height) {
-      docSize.width = width
-      docSize.height = height
+  if (docSize.width !== width || docSize.height !== height) {
+    docSize.width = width
+    docSize.height = height
 
+    if (window.innerWidth && window.innerHeight) {
       callMethod('setDocSize', docSize)
     }
   }
@@ -61,8 +61,10 @@ const onReady = () => {
     })
   })
 
-  // 文档加载完毕
-  callMethod('docReady')
+  callMethod('docReady', {
+    docWidth: docSize.width,
+    docHeight: docSize.height,
+  })
 }
 
 if (document.readyState === 'loading') {

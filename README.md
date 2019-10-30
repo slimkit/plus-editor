@@ -146,7 +146,7 @@ webview 中图片被点击后，将调用 `clickImage('{"src":"点击的图片UR
 
 ### 文档加载完毕
 
-webview 文档就绪时，将调用 `docReady()` 通知客户端，文档就绪时，图片点击才会通知客户端
+webview 文档就绪时，将调用 `docReady({"docWidth":123.0,"docHeight":789.0})` 通知客户端，文档就绪时，图片点击才会通知客户端
 
 ### 页面隐藏通知
 

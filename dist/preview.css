@@ -938,30 +938,54 @@
   border: 1px solid #ccc;
 }
 
+html,
 body {
   margin: 0;
 }
+video::-webkit-media-controls-enclosure {
+  display: none;
+}
 .ql-editor {
-  padding: 12px 15px;
-  height: auto;
+  padding: 15px;
   color: #666;
   font-size: 14px;
+  line-height: 24px;
+  white-space: normal;
+}
+.ql-editor a {
+  color: #59b6d7;
+  text-decoration: underline;
+}
+.ql-editor h1 {
+  font-size: 18px;
+  line-height: 28px;
 }
 .ql-editor img {
+  margin: auto;
+  display: block;
   max-width: 100%;
 }
 .ql-editor video {
-  max-width: 100%;
-}
-.ql-editor video:before {
-  content: '';
-  width: 20vw;
-  height: 20vw;
-  background-color: #f00;
-}
-.ql-editor .quill-image,
-.ql-editor .quill-video {
-  display: block;
   margin: auto;
+  display: block;
+  width: 100%;
+  max-height: width;
+  background-color: #000;
+}
+.ql-editor > p,
+.ql-editor > h1,
+.ql-editor > img,
+.ql-editor > video,
+.ql-editor > div,
+.ql-editor > section {
+  margin-bottom: 12px;
+}
+.ql-editor > blockquote {
+  margin: 0 0 12px 0 !important;
+  border-left: 2px solid #ccc !important;
+  padding-left: 12px !important;
+}
+.ql-editor > *:last-child {
+  margin-bottom: 0 !important;
 }
 

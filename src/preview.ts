@@ -1,64 +1,74 @@
 import 'quill/assets/snow.styl'
 import './preview.styl'
 import { callMethod } from './caller'
-function computer() {
-  const imgArr = Array.from(document.querySelectorAll('img[data-width]'))
-  imgArr.forEach(element => {
-    const width = +element.getAttribute('data-width')!
-    const height = +element.getAttribute('data-height')!
-    let newWidth: number = 0
-    let newHeight: number = 0
-    const el = document.querySelector('.ql-editor')!
-    if (width > el.clientWidth) {
-      newWidth = el.clientWidth
-      newHeight = height * (el.clientWidth / width)
-    } else {
-      newWidth = width
-      newHeight = height
-    }
-    // window.alert(newWidth)
-    element.setAttribute('style', `width:${newWidth}px;height:${newHeight}px`)
-  })
+import { getViewElement, fixSize } from './common'
+
+interface DocSize {
+  width: number
+  height: number
 }
-function videoComputer() {
-  const videoArr = Array.from(document.querySelectorAll('.quill-video'))
-  videoArr.forEach(element => {
-    const width = +element.getAttribute('data-width')!
-    const height = +element.getAttribute('data-height')!
-    let newWidth: number = 0
-    let newHeight: number = 0
-    const el = document.querySelector('.ql-editor')!
-    // 视频宽度大于预览区域宽度
-    // if (width > el.clientWidth) {
-    newWidth = el.clientWidth
-    newHeight = newWidth < height ? newWidth : height
-    // } else {
-    //   newWidth = width
-    //   newHeight = height
-    // }
-    element.setAttribute('width', `${newWidth}px`)
-    element.setAttribute('height', `${newHeight}px`)
+
+const docSize: DocSize = { width: 0, height: 0 }
+
+function setDocSize() {
+  const width = document.body.offsetWidth
+  const height = document.body.offsetHeight
+
+  if (docSize.width !== width || docSize.height !== height) {
+    docSize.width = width
+    docSize.height = height
+
+    if (window.innerWidth && window.innerHeight) {
+      callMethod('setDocSize', docSize)
+    }
+  }
+}
+
+window.addEventListener('resize', () => {
+  fixSize()
+  setDocSize()
+})
+
+const onReady = () => {
+  fixSize()
+  setDocSize()
+
+  const view = getViewElement()
+
+  if (!view) {
+    return
+  }
+
+  const images: object[] = []
+
+  view.querySelectorAll('img').forEach((img, index) => {
+    images.push({
+      src: img.src,
+      width: Number(img.dataset.width) || 0,
+      height: Number(img.dataset.height) || 0,
+    })
+
+    img.addEventListener('click', () => {
+      callMethod('clickImage', { src: img.src, arr: images, index })
+    })
+  })
+
+  view.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', (e: Event) => {
+      if (!/^https?:\/\//.test(a.href)) {
+        e.preventDefault()
+      }
+    })
+  })
+
+  callMethod('docReady', {
+    docWidth: docSize.width,
+    docHeight: docSize.height,
   })
 }
 
-;(function() {
-  const imgList = document.querySelectorAll('img')
-  const arr: Array<object> = []
-  Array.prototype.map.call(imgList, (item, index) => {
-    arr.push({
-      src: item.src,
-      width: item.dataset.width ? item.dataset.width : 0,
-      height: item.dataset.height ? item.dataset.height : 0,
-    })
-    item.onclick = () => {
-      callMethod('clickImage', { src: item.src, arr: arr, index: index })
-    }
-  })
-})()
-computer()
-// alert('init')
-videoComputer()
-window.addEventListener('resize', () => {
-  computer()
-  videoComputer()
-})
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', onReady)
+} else {
+  onReady()
+}

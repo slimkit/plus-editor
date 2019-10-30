@@ -136,6 +136,30 @@
    }
    ```
 
+### 设置页面尺寸
+
+webview 文档就绪和窗口大小发生变化时，将调用 `setDocSize('{"width":123.0,"height":789.0}')` 通知客户端 webview 新的宽高
+
+### 点击图片预览
+
+webview 中图片被点击后，将调用 `clickImage('{"src":"点击的图片URL","index":0,"images":[{"src":"图片地址","width":100,"height":100}]}')` 通知客户端，客户端实现图片预览功能
+
+### 文档加载完毕
+
+webview 文档就绪时，将调用 `docReady()` 通知客户端，文档就绪时，图片点击才会通知客户端
+
+### 页面隐藏通知
+
+webview 被隐藏时，客户端应该通知 webview，webview 将暂停页面播放的媒体
+
+```js
+window.pageHiddenReceiver()
+```
+
+### 打印日志
+
+webview 将调用 `showLog("日志内容")` 通知客户端打印日志，客户端将日志打印在自己的控制台
+
 # 开发
 
 ## 技术选型

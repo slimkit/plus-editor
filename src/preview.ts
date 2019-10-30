@@ -3,14 +3,35 @@ import './preview.styl'
 import { callMethod } from './caller'
 import { getViewElement, fixSize } from './common'
 
-window.addEventListener('resize', fixSize)
+interface DocSize {
+  width: number
+  height: number
+}
+
+const docSize: DocSize = { width: 0, height: 0 }
+
+function setDocSize() {
+  if (window.innerWidth && window.innerHeight) {
+    const width = document.body.offsetWidth
+    const height = document.body.offsetHeight
+
+    if (docSize.width !== width || docSize.height !== height) {
+      docSize.width = width
+      docSize.height = height
+
+      callMethod('setDocSize', docSize)
+    }
+  }
+}
+
+window.addEventListener('resize', () => {
+  fixSize()
+  setDocSize()
+})
 
 const onReady = () => {
   fixSize()
-
-  callMethod('docReady', {
-    docHeight: document.body.offsetHeight,
-  })
+  setDocSize()
 
   const view = getViewElement()
 
@@ -39,6 +60,9 @@ const onReady = () => {
       }
     })
   })
+
+  // 文档加载完毕
+  callMethod('docReady')
 }
 
 if (document.readyState === 'loading') {

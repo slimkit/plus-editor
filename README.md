@@ -4,14 +4,6 @@
 
 ## webview / iframe 通信
 
-### 页面地址
-
-支持 pc 嵌入 iframe、安卓/IOS 端嵌入 webview
-
-- PC iframe 地址 `http://test-plus.zhibocloud.cn/plus-editor/dist/desktop.html`
-
-- 移动端 webview 地址 `http://test-plus.zhibocloud.cn/plus-editor/dist/index.html`
-
 ### webview -> 客户端 通信
 
 - 安卓端注入 `window.launcher` 对象

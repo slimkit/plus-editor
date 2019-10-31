@@ -30,3 +30,36 @@ export function callMethod(fnName: string, params: any = undefined) {
   }
   return true
 }
+
+enum FuncName {
+  setContentReceiver = 'setContentReceiver',
+  imagePreviewReceiver = 'imagePreviewReceiver',
+  imageProgressReceiver = 'imageProgressReceiver',
+  imageUrlReceiver = 'imageUrlReceiver',
+  imageFailedReceiver = 'imageFailedReceiver',
+  videoPreviewReceiver = 'videoPreviewReceiver',
+  videoProgressReceiver = 'videoProgressReceiver',
+  videoUrlReceiver = 'videoUrlReceiver',
+  videoFailedReceiver = 'videoFailedReceiver',
+  editorSubmitReceiver = 'editorSubmitReceiver',
+  changePlaceholder = 'changePlaceholder',
+  pageHiddenReceiver = 'pageHiddenReceiver',
+}
+
+const postMessage = window.postMessage
+window.postMessage = function(
+  message: any,
+  targetOrigin: string = '*',
+  transfer?: Transferable[],
+): void {
+  postMessage(message, targetOrigin, transfer)
+}
+
+window.addEventListener('message', (e: MessageEvent) => {
+  const funcName: FuncName = (e.data || {}).funcName
+
+  if (funcName && typeof window[funcName] === 'function') {
+    const params = (e.data || {}).params || undefined
+    window[funcName](params && JSON.stringify(params))
+  }
+})

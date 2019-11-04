@@ -168,9 +168,9 @@ window.imageProgressReceiver = (data: string) => {
 
 /** 设置图片上传成功 */
 window.imageUrlReceiver = (data: string) => {
-  const { id, url } = JSON.parse(data) || {}
+  const { id, url, node } = JSON.parse(data) || {}
 
-  ImageBlot.setUploadSuccess(`${id}`, `${url}`)
+  ImageBlot.setUploadSuccess(`${id}`, `${url}`, `${node || ''}`)
 }
 
 /** 设置图片上传失败 */
@@ -229,9 +229,14 @@ window.videoProgressReceiver = (data: string) => {
 
 /** 设置视频上传成功 */
 window.videoUrlReceiver = (data: string) => {
-  const { id, url, poster } = JSON.parse(data) || {}
+  const { id, url, urlNode, poster, posterNode } = JSON.parse(data) || {}
 
-  VideoBlot.setUploadSuccess(`${id}`, `${url}`, `${poster}`)
+  VideoBlot.setUploadSuccess(`${id}`, {
+    src: `${url}`,
+    srcNode: `${urlNode || ''}`,
+    poster: `${poster}`,
+    posterNode: `${posterNode || ''}`,
+  })
 }
 
 /** 设置视频上传失败 */
@@ -260,11 +265,24 @@ window.editorSubmitReceiver = () => {
   const pendingImages = ImageBlot.pendingImages()
   const pendingVideos = VideoBlot.pendingVideos()
 
+  const medias: { image: string; video?: string }[] = []
+
+  div!.querySelectorAll('img, video').forEach((el: any) => {
+    const tagName = el.tagName.toUpperCase()
+    const { srcNode, posterNode } = el.dataset
+
+    if (tagName === 'IMG' && srcNode) {
+      medias.push({ image: srcNode })
+    } else if (tagName === 'VIDEO' && srcNode && posterNode) {
+      medias.push({ image: posterNode, video: srcNode })
+    }
+  })
+
   html = div!.innerHTML
   div = null
 
-  if (!callMethod('sendContentHTML', { html, pendingImages, pendingVideos, isEmpty })) {
-    console.log('sendContentHTML', { html, pendingImages, pendingVideos, isEmpty })
+  if (!callMethod('sendContentHTML', { html, medias, pendingImages, pendingVideos, isEmpty })) {
+    console.log('sendContentHTML', { html, medias, pendingImages, pendingVideos, isEmpty })
   }
 }
 

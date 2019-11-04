@@ -6,7 +6,9 @@ const BlockEmbed = Quill.import('blots/block/embed')
 interface VideoBlotValue {
   id?: string
   src: string
+  srcNode?: string
   poster: string
+  posterNode?: string
   width?: number
   height?: number
 }
@@ -79,12 +81,13 @@ export class VideoBlot extends BlockEmbed {
 
   static refreshUpload(id: string) {
     setTimeout(() => {
-      const { status, progress, error, src, poster } = VideoBlot.uploadStatus[id] || {}
+      const { status, progress, error, src, srcNode, poster, posterNode } =
+        VideoBlot.uploadStatus[id] || {}
 
       if (status === 'UPLOADING') {
         VideoBlot.updateUploadProgress(id, progress)
       } else if (status === 'SUCCESS') {
-        VideoBlot.setUploadSuccess(id, src, poster)
+        VideoBlot.setUploadSuccess(id, { src, srcNode, poster, posterNode })
       } else if (status === 'ERROR') {
         VideoBlot.setUploadError(id, error)
       }
@@ -124,8 +127,17 @@ export class VideoBlot extends BlockEmbed {
     })
   }
 
-  static setUploadSuccess(id: string, src: string, poster: string) {
-    VideoBlot.uploadStatus[id] = { status: 'SUCCESS', src }
+  static setUploadSuccess(id: string, options: VideoBlotValue) {
+    const { src, srcNode, poster, posterNode } = options
+    VideoBlot.uploadStatus[id] = { status: 'SUCCESS', src, poster }
+
+    if (srcNode) {
+      VideoBlot.uploadStatus[id].srcNode = srcNode
+    }
+
+    if (posterNode) {
+      VideoBlot.uploadStatus[id].posterNode = posterNode
+    }
 
     document.querySelectorAll<HTMLDivElement>(`div.video-${id}`).forEach(node => {
       node.querySelector<HTMLDivElement>('div.progress-bar')!.remove()
@@ -134,9 +146,16 @@ export class VideoBlot extends BlockEmbed {
       const video = node.querySelector<HTMLVideoElement>('video')
 
       if (video) {
-        // video.setAttribute('src', src) 将导致图片闪动
         video.dataset.src = src
         video.dataset.poster = poster
+
+        if (srcNode) {
+          video.dataset.srcNode = srcNode
+        }
+
+        if (posterNode) {
+          video.dataset.posterNode = posterNode
+        }
       }
 
       node.classList.remove(`video-${id}`)
@@ -173,6 +192,14 @@ export class VideoBlot extends BlockEmbed {
       video.dataset.height = '0'
     }
 
+    if (value.srcNode) {
+      video.dataset.srcNode = value.srcNode
+    }
+
+    if (value.posterNode) {
+      video.dataset.posterNode = value.posterNode
+    }
+
     video.setAttribute('src', value.src)
     video.setAttribute('poster', value.poster)
 
@@ -203,6 +230,14 @@ export class VideoBlot extends BlockEmbed {
       if (width && height) {
         value.width = width
         value.height = height
+      }
+
+      if (video.dataset.srcNode) {
+        value.srcNode = video.dataset.srcNode
+      }
+
+      if (video.dataset.posterNode) {
+        value.posterNode = video.dataset.posterNode
       }
     }
 

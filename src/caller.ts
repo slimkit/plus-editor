@@ -1,3 +1,5 @@
+import { tryHijackUploadCall } from './uploader'
+
 /**
  * 调用客户端函数的方法
  *
@@ -23,8 +25,11 @@ export function callMethod(fnName: string, params: any = undefined) {
     window.webkit.messageHandlers.MobilePhoneCall.postMessage({ funcName: fnName, params })
   } else if (window.self != window.parent) {
     // in iframe
-    window.parent.postMessage({ funcName: fnName, params }, '*')
+    if (!tryHijackUploadCall(fnName, params)) {
+      window.parent.postMessage({ funcName: fnName, params }, '*')
+    }
   } else {
+    tryHijackUploadCall(fnName, params)
     // not in webview
     return false
   }
@@ -32,6 +37,7 @@ export function callMethod(fnName: string, params: any = undefined) {
 }
 
 enum FuncName {
+  setUploaderOptions = 'setUploaderOptions',
   setContentReceiver = 'setContentReceiver',
   imagePreviewReceiver = 'imagePreviewReceiver',
   imageProgressReceiver = 'imageProgressReceiver',

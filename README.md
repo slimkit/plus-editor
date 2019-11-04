@@ -92,10 +92,10 @@
 
 4. 待图片上传完毕后, 将图片网络地址连同刚才的唯一标识(id)再次发送给 webview
 
-   调用 webview 的以下方法传递上传后的图片, 编辑器会在提交时进行替换
+   调用 webview 的以下方法传递上传后的图片, 编辑器会在提交时进行替换，node 参数是可选的
 
    ```js
-   window.imageUrlReceiver('{ "id": "unique-id", "url": "newwork-file-url" }')
+   window.imageUrlReceiver('{ "id": "unique-id", "url": "newwork-file-url", "node": "xxx" }')
    ```
 
 5. 图片上传失败后, 各端调用 webview 的以下方法通知 webview 在指定 id 的图片上显示上传失败的提示，其中 error 参数不是必填的
@@ -109,6 +109,16 @@
 7. 用户删除图片时，调用各端`removeImage('{"id":"unique-id", "status":"UPLOADING"}')`，其中 status 的值有 UPLOADING|ERROR|SUCCESS 分别表示 上传中|上传失败|上传成功，通常上传失败和成功不需要处理
 
 8. 当编辑器插入 id 重复的图片时（例如删除后撤销删除），将调用各端`reinsertImage('{"id":"unique-id", "status":"UPLOADING"}')`，其中 status 的值有 UPLOADING|ERROR|SUCCESS 分别表示 上传中|上传失败|上传成功，通常上传失败和成功不需要处理
+
+### 编辑器上传文件
+
+当在 iframe 中时，编辑器会自行上传文件，iframe 上层需设置基础 api url 和用户 token
+
+```js
+window.setUploaderOptions(
+  '{"apiV2BaseUrl": "https://domain/api/v2", "userToken": "token", "storage": {"channel": "public"}}',
+)
+```
 
 ### 提交
 

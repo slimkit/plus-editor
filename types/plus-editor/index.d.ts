@@ -14,9 +14,10 @@ declare global {
     /** IOS 端注入 webview 中的对象 */
     webkit: any
 
-    /**
-     * 设置HTML内容
-     */
+    /** * 设置上传选项 */
+    setUploaderOptions: (options: any) => void
+
+    /** * 设置HTML内容 */
     setContentReceiver: (data: string) => void
 
     /** 接收图片预览地址的钩子 */

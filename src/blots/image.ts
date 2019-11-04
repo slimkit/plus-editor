@@ -6,6 +6,7 @@ const BlockEmbed = Quill.import('blots/block/embed')
 interface ImageBlotValue {
   id?: string
   src: string
+  srcNode?: string
   width?: number
   height?: number
 }
@@ -99,12 +100,12 @@ export class ImageBlot extends BlockEmbed {
 
   static refreshUpload(id: string) {
     setTimeout(() => {
-      const { status, progress, error, src } = ImageBlot.uploadStatus[id] || {}
+      const { status, progress, error, src, srcNode } = ImageBlot.uploadStatus[id] || {}
 
       if (status === 'UPLOADING') {
         ImageBlot.updateUploadProgress(id, progress)
       } else if (status === 'SUCCESS') {
-        ImageBlot.setUploadSuccess(id, src)
+        ImageBlot.setUploadSuccess(id, src, srcNode)
       } else if (status === 'ERROR') {
         ImageBlot.setUploadError(id, error)
       }
@@ -144,7 +145,7 @@ export class ImageBlot extends BlockEmbed {
     })
   }
 
-  static setUploadSuccess(id: string, src: string) {
+  static setUploadSuccess(id: string, src: string, srcNode?: string) {
     ImageBlot.uploadStatus[id] = { status: 'SUCCESS', src }
 
     document.querySelectorAll<HTMLDivElement>(`div.image-${id}`).forEach(node => {
@@ -155,6 +156,9 @@ export class ImageBlot extends BlockEmbed {
 
       if (img) {
         // img.setAttribute('src', src) 将导致图片闪动
+        if (srcNode) {
+          img.dataset.srcNode = srcNode
+        }
         img.dataset.src = src
       }
 
@@ -197,6 +201,10 @@ export class ImageBlot extends BlockEmbed {
       img.dataset.height = `${value.height}`
     }
 
+    if (value.srcNode) {
+      img.dataset.srcNode = value.srcNode
+    }
+
     img.setAttribute('src', value.src)
 
     wrap.appendChild(img)
@@ -225,6 +233,10 @@ export class ImageBlot extends BlockEmbed {
       if (width && height) {
         value.width = width
         value.height = height
+      }
+
+      if (img.dataset.srcNode) {
+        value.srcNode = img.dataset.srcNode
       }
     }
 

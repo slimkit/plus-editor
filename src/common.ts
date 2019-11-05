@@ -71,6 +71,8 @@ export function fixVideoSize() {
       video.removeEventListener('playing', onPalyVideo)
       video.addEventListener('playing', onPalyVideo)
 
+      console.log(video.shadowRoot)
+
       const viewWidth = getViewWidth()
       if (!viewWidth) return
 

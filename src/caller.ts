@@ -65,7 +65,10 @@ window.addEventListener('message', (e: MessageEvent) => {
   const funcName: FuncName = (e.data || {}).funcName
 
   if (funcName && typeof window[funcName] === 'function') {
-    const params = (e.data || {}).params || undefined
-    window[funcName](params && JSON.stringify(params))
+    let params = (e.data || {}).params
+    if (!['changePlaceholder', 'setContentReceiver'].includes(funcName)) {
+      params = params && JSON.stringify(params)
+    }
+    window[funcName](params)
   }
 })

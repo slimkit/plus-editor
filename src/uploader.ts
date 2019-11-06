@@ -256,7 +256,7 @@ async function getMediaInfo(file: File) {
         reject(new Error('读取文件异常'))
       })
 
-      reader.readAsArrayBuffer(file)
+      reader.readAsArrayBuffer(info.file)
     })
   }
 

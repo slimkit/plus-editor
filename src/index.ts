@@ -138,6 +138,12 @@ ImageBlot.eventEmitter.on('reupload', data => {
   }
 })
 
+ImageBlot.eventEmitter.on('insertRemoteImage', data => {
+  if (!callMethod('insertRemoteImage', data)) {
+    console.log('insertRemoteImage', data)
+  }
+})
+
 /** 收到图片后预览 */
 window.imagePreviewReceiver = data => {
   const srcList = JSON.parse(data)
@@ -158,6 +164,13 @@ window.imagePreviewReceiver = data => {
   }
 
   setTimeout(fixImageSize, 0)
+}
+
+window.uploadRemoteImage = (data: string) => {
+  const { id, remoteId } = JSON.parse(data) || {}
+  if (remoteId && `${id || ''}`) {
+    ImageBlot.uploadRemoteImage(remoteId, `${id}`)
+  }
 }
 
 /** 更新图片上传进度 */

@@ -22,6 +22,7 @@ declare global {
 
     /** 接收图片预览地址的钩子 */
     imagePreviewReceiver: (data: string) => void
+    uploadRemoteImage: (data: string) => void
     /** 接收图片实际上传进度的钩子 */
     imageProgressReceiver: (data: string) => void
     /** 接收图片实际地址的钩子 */

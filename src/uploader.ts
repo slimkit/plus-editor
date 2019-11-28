@@ -5,6 +5,19 @@ let userToken: string = ''
 let apiV2BaseUrl: string = ''
 let storage = { channel: 'public' }
 
+try {
+  const sp = new URL(window.location.href).searchParams
+
+  userToken = sp.get('user_token') || ''
+  apiV2BaseUrl = sp.get('api_v2_base_url') || ''
+  const uploadStorage = sp.get('upload_storage')
+  if (uploadStorage) {
+    storage = JSON.parse(uploadStorage)
+  }
+} catch (err) {
+  //
+}
+
 window.setUploaderOptions = options => {
   if (typeof options === 'string') {
     options = JSON.parse(options)
@@ -23,6 +36,7 @@ const uploadFuncNames = [
   'removeImage',
   'reinsertImage',
   'reuploadImage',
+  'insertRemoteImage',
   'chooseVideo',
   'removeVideo',
   'reinsertVideo',
@@ -36,18 +50,14 @@ export function tryHijackUploadCall(funcName: string, params: any): boolean {
 
   if (funcName.startsWith('choose')) {
     chooseAndUpload(funcName.substr(6).toLowerCase())
-  }
-
-  if (funcName.startsWith('remove')) {
+  } else if (funcName.startsWith('remove')) {
     handleRemove(funcName.substr(6).toLowerCase(), params)
-  }
-
-  if (funcName.startsWith('reinsert')) {
+  } else if (funcName.startsWith('reinsert')) {
     handleReinsert(funcName.substr(8).toLowerCase(), params)
-  }
-
-  if (funcName.startsWith('reupload')) {
+  } else if (funcName.startsWith('reupload')) {
     handleReupload(funcName.substr(8).toLowerCase(), params)
+  } else if (funcName === 'insertRemoteImage') {
+    uploadRemoteImage(params)
   }
 
   return true
@@ -72,11 +82,12 @@ interface UploadFile extends MediaFile {
   useCounter: number
   status?: string
   cancelUpload?: () => void
+  error?: string
 }
 
 const uploadFiles: Map<string, UploadFile> = new Map()
 
-let fileCounter = 0
+let fileCounter = 1
 
 function chooseAndUpload(type: string) {
   const input = document.createElement('input')
@@ -271,6 +282,69 @@ async function getMediaInfo(file: File) {
   return mf
 }
 
+async function uploadRemoteImage(params: {
+  src: string
+  remoteId: string
+  width: number
+  height: number
+}) {
+  const id = `${fileCounter++}`
+
+  window.postMessage(
+    {
+      funcName: `uploadRemoteImage`,
+      params: { id, remoteId: params.remoteId },
+    },
+    '*',
+  )
+
+  try {
+    const { headers, data } = await axios.get(params.src, { responseType: 'arraybuffer' })
+
+    const contentType = (headers['content-type'] || '').toLowerCase().trim()
+    if (!data || data.byteLength <= 0 || !contentType || !contentType.startsWith('image/')) {
+      throw new Error('无法下载远程图片，请手动上传')
+    }
+
+    const spark = new Spark.ArrayBuffer()
+    const hash = spark.append(data).end()
+    const filename = `${Date.now()}.${contentType.substr(6)}`
+    const file = new File([data], filename, {
+      type: contentType,
+    })
+
+    uploadFiles.set(id, {
+      id,
+      useCounter: 1,
+      image: {
+        file,
+        buff: data,
+        hash,
+        url: params.src,
+        width: params.width,
+        height: params.height,
+      },
+    })
+  } catch (error) {
+    const buff = new ArrayBuffer(0)
+    uploadFiles.set(id, {
+      id,
+      useCounter: 1,
+      image: {
+        file: new File([buff], 'empty'),
+        buff: buff,
+        hash: '',
+        url: params.src,
+        width: params.width,
+        height: params.height,
+      },
+      error: error.message || '未知错误',
+    })
+  }
+
+  handleUpload('image', id)
+}
+
 async function handleUpload(type: string, id: string) {
   const uf = uploadFiles.get(id)
 
@@ -279,6 +353,10 @@ async function handleUpload(type: string, id: string) {
   }
 
   try {
+    if (uf.error) {
+      throw new Error(uf.error)
+    }
+
     const upload = async (info: MediaFileInfo) => {
       let source = axios.CancelToken.source()
       uf.cancelUpload = source.cancel.bind(source)
@@ -377,7 +455,7 @@ async function handleUpload(type: string, id: string) {
     } else {
       uf.status = 'ERROR'
 
-      let message = '网络异常导致上传失败'
+      let message = e.message || '网络异常导致上传失败'
       if (e.response && e.response.data) {
         message = e.response.data.message
         if (Array.isArray(message)) {

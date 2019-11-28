@@ -17,6 +17,7 @@ export class ImageBlot extends BlockEmbed {
   static className = 'image-container'
 
   static quill: Quill
+  static remoteCounter = 1
   static eventEmitter = new EventEmitter()
   static uploadStatus: { [key: string]: any } = {}
 
@@ -31,7 +32,7 @@ export class ImageBlot extends BlockEmbed {
 
     const {
       img,
-      value: { id, src, width = 0, height = 0 },
+      value: { id, src, srcNode, width = 0, height = 0 },
     } = ImageBlot.getImgAndValue(node)
 
     if (id) {
@@ -50,27 +51,9 @@ export class ImageBlot extends BlockEmbed {
 
     if (img && src) {
       const appendEls = (width: number, height: number) => {
-        const wrap = node.querySelector('.image-wrap')
+        const wrap = node.querySelector('.image-wrap')!
 
-        if (!wrap) return
-
-        if (id && !node.querySelector('.progress-bar')) {
-          const div = ImageBlot.createDiv('progress-bar')
-          div.appendChild(ImageBlot.createDiv('progress'))
-          wrap.appendChild(div)
-        }
-
-        if (id && !node.querySelector('.error')) {
-          const div = ImageBlot.createDiv('error')
-          div.addEventListener('click', () => {
-            ImageBlot.uploadStatus[id] = {}
-            this.domNode.classList.remove('fail')
-            ImageBlot.eventEmitter.emit('reupload', { id })
-          })
-          wrap.appendChild(div)
-        }
-
-        if (width >= 100 && height >= 100) {
+        if (width >= 50 && height >= 50) {
           if (!node.querySelector('.remove')) {
             const div = ImageBlot.createDiv('remove')
             div.addEventListener('click', () => {
@@ -80,7 +63,18 @@ export class ImageBlot extends BlockEmbed {
           }
         }
 
-        if (id) ImageBlot.refreshUpload(id)
+        if (id) {
+          ImageBlot.refreshUpload(id)
+        } else if (!srcNode) {
+          const remoteId = `remote-${ImageBlot.remoteCounter++}`
+          node.classList.add(remoteId)
+          ImageBlot.eventEmitter.emit('insertRemoteImage', {
+            remoteId,
+            src,
+            width,
+            height,
+          })
+        }
       }
 
       if (width && height) {
@@ -112,6 +106,19 @@ export class ImageBlot extends BlockEmbed {
     }, 0)
   }
 
+  static uploadRemoteImage(remoteId: string, id: string) {
+    if (ImageBlot.uploadStatus[id]) return
+
+    const node = document.querySelector(`div.${remoteId}`)
+    if (node) {
+      ImageBlot.uploadStatus[id] = {}
+      node.classList.add(`image-${id}`)
+      node.classList.remove(remoteId)
+
+      node.querySelector<HTMLImageElement>('img.image')!.dataset.id = id
+    }
+  }
+
   static updateUploadProgress(id: string, progress: number) {
     if ((ImageBlot.uploadStatus[id] || {}).status === 'SUCCESS') return
 
@@ -120,7 +127,17 @@ export class ImageBlot extends BlockEmbed {
     document.querySelectorAll<HTMLDivElement>(`div.image-${id}`).forEach(node => {
       node.classList.remove('fail')
 
-      node.querySelector<HTMLDivElement>('div.progress')!.style.width = `${Math.round(progress)}%`
+      const wrap = node.querySelector('.image-wrap')!
+      if (!wrap.querySelector('.progress-bar')) {
+        const div = ImageBlot.createDiv('progress-bar')
+        const child = ImageBlot.createDiv('progress')
+        child.style.width = `${Math.round(progress)}%`
+        div.appendChild(child)
+        wrap.appendChild(div)
+      } else {
+        const child = wrap.querySelector<HTMLDivElement>('.progress')!
+        child.style.width = `${Math.round(progress)}%`
+      }
     })
   }
 
@@ -132,16 +149,25 @@ export class ImageBlot extends BlockEmbed {
     document.querySelectorAll<HTMLDivElement>(`div.image-${id}`).forEach(node => {
       if (!node.classList.contains('fail')) node.classList.add('fail')
 
-      const div = node.querySelector<HTMLDivElement>('div.error')
+      const wrap = node.querySelector<HTMLDivElement>('.image-wrap')!
+      let div = wrap.querySelector<HTMLDivElement>('div.error')
 
-      if (div) {
-        let html = '<span>上传失败，点击重试</span>'
-        if (error) {
-          html += `<span>${error}</span>`
-        }
-
-        div.innerHTML = html
+      if (!div) {
+        div = ImageBlot.createDiv('error')
+        div.addEventListener('click', () => {
+          node.classList.remove('fail')
+          ImageBlot.uploadStatus[id] = {}
+          ImageBlot.eventEmitter.emit('reupload', { id })
+        })
+        wrap.appendChild(div)
       }
+
+      let html = '<span>上传失败，点击重试</span>'
+      if (error) {
+        html += `<span>${error}</span>`
+      }
+
+      div.innerHTML = html
     })
   }
 
@@ -149,8 +175,10 @@ export class ImageBlot extends BlockEmbed {
     ImageBlot.uploadStatus[id] = { status: 'SUCCESS', src }
 
     document.querySelectorAll<HTMLDivElement>(`div.image-${id}`).forEach(node => {
-      node.querySelector<HTMLDivElement>('div.progress-bar')!.remove()
-      node.querySelector<HTMLDivElement>('div.error')!.remove()
+      const p = node.querySelector<HTMLDivElement>('div.progress-bar')
+      const e = node.querySelector<HTMLDivElement>('div.error')
+      if (p) p.remove()
+      if (e) e.remove()
 
       const img = node.querySelector<HTMLImageElement>('img.image')
 

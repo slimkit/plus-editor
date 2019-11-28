@@ -29,10 +29,11 @@ export function callMethod(fnName: string, params: any = undefined) {
       window.parent.postMessage({ funcName: fnName, params }, '*')
     }
   } else {
-    tryHijackUploadCall(fnName, params)
     // not in webview
-    return false
+    tryHijackUploadCall(fnName, params)
+    return true
   }
+
   return true
 }
 

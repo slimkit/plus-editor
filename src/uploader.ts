@@ -376,6 +376,7 @@ async function handleUpload(type: string, id: string) {
         {
           headers: {
             Authorization: userToken,
+            Accept: 'application/json, */*',
           },
           baseURL: apiV2BaseUrl,
           validateStatus: s => s === 200 || s === 201,

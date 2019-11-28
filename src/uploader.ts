@@ -299,37 +299,47 @@ async function uploadRemoteImage(params: {
   )
 
   try {
-    let url = params.src
-    const queryParams: { url?: string } = {}
-    const sp = params.src.substr(0, 5).toLowerCase()
-    if (sp !== window.location.protocol && sp.startsWith('http')) {
-      queryParams.url = params.src
-      url = `${apiV2BaseUrl.replace(/\/+$/, '')}/proxy-request`
-    }
+    const contentType = 'image/png'
+    const filename = `${Date.now()}.png`
+    const { blob, file, buff } = await new Promise((resolve, reject) => {
+      const img = document.createElement('img')
+      img.addEventListener('load', () => {
+        console.log('here')
+        const canvas = document.createElement('canvas')
+        canvas.setAttribute('width', `${params.width}`)
+        canvas.setAttribute('height', `${params.height}`)
 
-    const { headers, data } = await axios.get(url, {
-      responseType: 'arraybuffer',
-      params: queryParams,
+        const ctx = canvas.getContext('2d')!
+        ctx.drawImage(img, 0, 0, params.width, params.height)
+
+        canvas.toBlob(blob => {
+          if (!blob) {
+            return reject()
+          }
+          const reader = new FileReader()
+          reader.addEventListener('load', () => {
+            const buff = reader.result as ArrayBuffer
+            const file = new File([blob], filename, { type: contentType })
+            resolve({ blob, file, buff })
+          })
+          reader.addEventListener('error', () => reject())
+          reader.readAsArrayBuffer(blob)
+        }, contentType)
+      })
+      img.addEventListener('error', () => reject())
+      img.crossOrigin = 'anonymous'
+      img.src = params.src
     })
-
-    const contentType = (headers['content-type'] || '').toLowerCase().trim()
-    if (!data || data.byteLength <= 0 || !contentType || !contentType.startsWith('image/')) {
-      throw new Error()
-    }
 
     const spark = new Spark.ArrayBuffer()
-    const hash = spark.append(data).end()
-    const filename = `${Date.now()}.${contentType.substr(6)}`
-    const file = new File([data], filename, {
-      type: contentType,
-    })
+    const hash = spark.append(buff).end()
 
     uploadFiles.set(id, {
       id,
       useCounter: 1,
       image: {
         file,
-        buff: data,
+        buff,
         hash,
         url: params.src,
         width: params.width,

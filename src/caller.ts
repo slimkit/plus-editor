@@ -30,8 +30,8 @@ export function callMethod(fnName: string, params: any = undefined) {
     }
   } else {
     // not in webview
-    tryHijackUploadCall(fnName, params)
-    return true
+    // tryHijackUploadCall(fnName, params)
+    return false
   }
 
   return true

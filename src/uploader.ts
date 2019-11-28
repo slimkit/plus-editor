@@ -299,8 +299,18 @@ async function uploadRemoteImage(params: {
   )
 
   try {
-    const url = params.src.replace(/^https?:/i, '')
-    const { headers, data } = await axios.get(url, { responseType: 'arraybuffer' })
+    let url = params.src
+    const queryParams: { url?: string } = {}
+    const sp = params.src.substr(0, 5).toLowerCase()
+    if (sp !== window.location.protocol && sp.startsWith('http')) {
+      queryParams.url = params.src
+      url = `${apiV2BaseUrl.replace(/\/+$/, '')}/proxy-request`
+    }
+
+    const { headers, data } = await axios.get(url, {
+      responseType: 'arraybuffer',
+      params: queryParams,
+    })
 
     const contentType = (headers['content-type'] || '').toLowerCase().trim()
     if (!data || data.byteLength <= 0 || !contentType || !contentType.startsWith('image/')) {

@@ -300,7 +300,7 @@ async function uploadRemoteImage(params: {
 
   try {
     const url = params.src.replace(/^https?:/i, '')
-    const { headers, data } = await axios.get(params.src, { responseType: 'arraybuffer' })
+    const { headers, data } = await axios.get(url, { responseType: 'arraybuffer' })
 
     const contentType = (headers['content-type'] || '').toLowerCase().trim()
     if (!data || data.byteLength <= 0 || !contentType || !contentType.startsWith('image/')) {

@@ -23,6 +23,8 @@ window.setUploaderOptions = options => {
     options = JSON.parse(options)
   }
 
+  console.log(options)
+
   userToken = options.userToken || ''
   apiV2BaseUrl = options.apiV2BaseUrl || ''
 
@@ -361,6 +363,8 @@ async function handleUpload(type: string, id: string) {
     const upload = async (info: MediaFileInfo) => {
       let source = axios.CancelToken.source()
       uf.cancelUpload = source.cancel.bind(source)
+
+      console.log(apiV2BaseUrl, userToken)
 
       const {
         data: { uri, method, headers, form, file_key: fileKey },

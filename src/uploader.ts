@@ -299,11 +299,12 @@ async function uploadRemoteImage(params: {
   )
 
   try {
+    const url = params.src.replace(/^https?:/i, '')
     const { headers, data } = await axios.get(params.src, { responseType: 'arraybuffer' })
 
     const contentType = (headers['content-type'] || '').toLowerCase().trim()
     if (!data || data.byteLength <= 0 || !contentType || !contentType.startsWith('image/')) {
-      throw new Error('无法下载远程图片，请手动上传')
+      throw new Error()
     }
 
     const spark = new Spark.ArrayBuffer()
@@ -338,7 +339,7 @@ async function uploadRemoteImage(params: {
         width: params.width,
         height: params.height,
       },
-      error: error.message || '未知错误',
+      error: '无法下载远程图片，请手动上传',
     })
   }
 

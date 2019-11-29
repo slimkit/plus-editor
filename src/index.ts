@@ -276,6 +276,8 @@ window.addEventListener('resize', () => {
   if (range && quill.hasFocus()) {
     quill.setSelection(range)
   }
+
+  fixSize()
 })
 
 export default quill

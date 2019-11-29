@@ -1,6 +1,6 @@
 {
   "name": "@slimkit/plus-editor",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "rich-text editor for plus",
   "main": "dist/main.bundle.js",
   "repository": "git@github.com:mutoe/plus-editor.git",

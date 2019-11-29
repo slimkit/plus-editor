@@ -47,6 +47,14 @@ export class ImageBlot extends BlockEmbed {
       } else {
         ImageBlot.uploadStatus[id] = {}
       }
+    } else {
+      setTimeout(() => {
+        if (!this.prev) return
+        const pNode = this.prev.domNode
+        if (pNode.tagName === 'P' && !pNode.innerText.trim()) {
+          this.prev.remove() // 移除图片前面的空行
+        }
+      }, 0)
     }
 
     if (img && src) {
@@ -319,4 +327,4 @@ export class ImageBlot extends BlockEmbed {
   }
 }
 
-Quill.register(ImageBlot)
+Quill.register(ImageBlot, true)

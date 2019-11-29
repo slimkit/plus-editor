@@ -304,7 +304,6 @@ async function uploadRemoteImage(params: {
     const { blob, file, buff } = await new Promise((resolve, reject) => {
       const img = document.createElement('img')
       img.addEventListener('load', () => {
-        console.log('here')
         const canvas = document.createElement('canvas')
         canvas.setAttribute('width', `${params.width}`)
         canvas.setAttribute('height', `${params.height}`)

@@ -327,7 +327,7 @@ async function uploadRemoteImage(params: {
       })
       img.addEventListener('error', () => reject())
       img.crossOrigin = 'anonymous'
-      img.src = params.src
+      img.src = `${apiV2BaseUrl.replace(/\/+/, '')}/crawl?url=${encodeURIComponent(params.src)}`
     })
 
     const spark = new Spark.ArrayBuffer()

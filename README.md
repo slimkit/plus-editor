@@ -49,11 +49,11 @@
 
 4. 待视频上传完毕后, 将视频网络地址连同刚才的唯一标识(id)再次发送给 webview
 
-   调用 webview 的以下方法传递上传后的视频, 编辑器会在提交时进行替换
+   调用 webview 的以下方法传递上传后的视频, 编辑器会在提交时进行替换, node 为可选
 
    ```js
    window.videoUrlReceiver(
-     '{ "id": "unique-id", "url": "newwork-file-url", "poster": "newwork-file-url" }',
+     '{ "id": "unique-id", "url": "newwork-file-url", "urlNode": "xxx", "poster": "newwork-file-url", "posterNode": "xxx" }',
    )
    ```
 

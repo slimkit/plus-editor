@@ -4,6 +4,7 @@ import Spark from 'spark-md5'
 let userToken: string = ''
 let apiV2BaseUrl: string = ''
 let storage = { channel: 'public' }
+let crawlerUrl: string = ''
 
 try {
   const sp = new URL(window.location.href).searchParams
@@ -23,6 +24,7 @@ window.setUploaderOptions = options => {
     options = JSON.parse(options)
   }
 
+  crawlerUrl = ''
   userToken = options.userToken || ''
   apiV2BaseUrl = options.apiV2BaseUrl || ''
 
@@ -282,6 +284,26 @@ async function getMediaInfo(file: File) {
   return mf
 }
 
+let crawlerUrlPromise: Promise<string> | null
+async function getCrawlerUrl() {
+  if (!crawlerUrl) {
+    if (!crawlerUrlPromise) {
+      const url = `${apiV2BaseUrl.replace(/\/+$/, '')}/crawl`
+      crawlerUrlPromise = axios
+        .head(url)
+        .then(() => (crawlerUrl = url))
+        .catch(() => (crawlerUrl = 'https://thinksns.zhibocloud.cn/api/v2/crawl'))
+        .finally(() => {
+          crawlerUrlPromise = null
+        })
+    }
+
+    return await crawlerUrlPromise
+  }
+
+  return crawlerUrl
+}
+
 async function uploadRemoteImage(params: {
   src: string
   remoteId: string
@@ -301,6 +323,7 @@ async function uploadRemoteImage(params: {
   try {
     const contentType = 'image/png'
     const filename = `${Date.now()}.png`
+    const crawlerUrl = await getCrawlerUrl()
     const { blob, file, buff } = await new Promise((resolve, reject) => {
       const img = document.createElement('img')
       img.addEventListener('load', () => {
@@ -327,7 +350,7 @@ async function uploadRemoteImage(params: {
       })
       img.addEventListener('error', () => reject())
       img.crossOrigin = 'anonymous'
-      img.src = `${apiV2BaseUrl.replace(/\/+$/, '')}/crawl?url=${encodeURIComponent(params.src)}`
+      img.src = `${crawlerUrl}?url=${encodeURIComponent(params.src)}`
     })
 
     const spark = new Spark.ArrayBuffer()

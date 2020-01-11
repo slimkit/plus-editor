@@ -200,7 +200,6 @@ async function getMediaInfo(file: File) {
 
       video.addEventListener('loadeddata', () => {
         video.pause()
-        video.currentTime = 0
 
         mf.video!.width = mf.image.width = video.videoWidth
         mf.video!.height = mf.image.height = video.videoHeight
@@ -228,8 +227,9 @@ async function getMediaInfo(file: File) {
           }, imageFileType)
         }
       })
-      video.autoplay = true
+
       video.muted = true
+      video.autoplay = true
       video.src = mf.video!.url
     })
   } else {

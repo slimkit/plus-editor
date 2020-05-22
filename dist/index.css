@@ -1156,6 +1156,9 @@ body {
   content: '移除';
 }
 
+:root {
+  color-scheme: light dark;
+}
 html,
 body {
   margin: 0;

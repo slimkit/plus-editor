@@ -938,6 +938,9 @@
   border: 1px solid #ccc;
 }
 
+:root {
+  color-scheme: light dark;
+}
 html,
 body {
   margin: 0;

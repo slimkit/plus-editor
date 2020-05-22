@@ -949,7 +949,7 @@
     --content-color: #dfdfdf;
   }
   .ql-editor {
-    color: #fff;
+    color: #fff !important;
   }
 }
 .ql-editor {

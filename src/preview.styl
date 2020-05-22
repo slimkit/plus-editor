@@ -1,6 +1,23 @@
 // 这里的样式也会影响到移动端的展示, 谨慎修改
-:root{
-	color-scheme:light dark;
+:root {
+	color-scheme: light dark;
+	--background-color: #FFFFFF;
+	--content-color: #15171A;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--background-color: #222;
+		--content-color: #dfdfdf;
+	}
+	.ql-editor {
+		color: #fff;
+	}
+}
+
+.ql-editor {
+	background: var(--background-color);
+	color: var(--content-color);
 }
 html, body {
 	margin: 0;

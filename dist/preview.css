@@ -940,6 +940,21 @@
 
 :root {
   color-scheme: light dark;
+  --background-color: #fff;
+  --content-color: #15171a;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #222;
+    --content-color: #dfdfdf;
+  }
+  .ql-editor {
+    color: #fff;
+  }
+}
+.ql-editor {
+  background: var(--background-color);
+  color: var(--content-color);
 }
 html,
 body {

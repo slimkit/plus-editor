@@ -1,16 +1,19 @@
 :root {
   color-scheme: light dark;
+  --background-color: #fff;
+  --content-color: #15171a;
 }
 @media (prefers-color-scheme: dark) {
-  .quill-editor-wrap {
-    .ql-container {
-      .ql-editor {
-        color: #ccc;
-      }
-    }
-    .ql-toolbar {
-      background-color: #ccc!important;
-    }
+  :root {
+    --background-color: #222;
+    --content-color: #dfdfdf;
+  }
+  .ql-toolbar {
+    background-color: #868686!important;
+      border-top-color: #000!important;
+  }
+  .ql-editor {
+    color: #fff !important;
   }
 }
 html

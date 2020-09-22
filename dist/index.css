@@ -938,6 +938,24 @@
   border: 1px solid #ccc;
 }
 
+:root {
+  color-scheme: light dark;
+  --background: transparent;
+  --content-color: #15171a;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #222;
+    --content-color: #dfdfdf;
+  }
+  .ql-toolbar {
+    background-color: #868686 !important;
+    border-top-color: #000 !important;
+  }
+  .ql-editor {
+    color: #868686 !important;
+  }
+}
 html,
 body {
   margin: 0;
@@ -1156,6 +1174,24 @@ body {
   content: '移除';
 }
 
+:root {
+  color-scheme: light dark;
+  --background-color: #fff;
+  --content-color: #15171a;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #222;
+    --content-color: #dfdfdf;
+  }
+  .ql-editor {
+    color: #fff !important;
+  }
+}
+.ql-editor {
+  background: var(--background-color);
+  color: var(--content-color);
+}
 html,
 body {
   margin: 0;

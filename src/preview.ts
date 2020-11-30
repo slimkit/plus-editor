@@ -48,6 +48,16 @@ const onReady = () => {
       height: Number(img.dataset.height) || 0,
     })
 
+    const imgWidth = Number(img.dataset.width) || 0
+    const imgHeight = Number(img.dataset.height) || 0
+
+    if (imgWidth && imgHeight) {
+      if (imgWidth > document.body.offsetWidth) {
+        img.style.width = `${document.body.offsetWidth}px`
+        img.style.height = `${imgHeight * (document.body.offsetWidth / imgWidth)}px`
+      }
+    }
+
     img.addEventListener('click', () => {
       callMethod('clickImage', { src: img.src, arr: images, index })
     })

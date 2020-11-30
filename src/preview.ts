@@ -67,7 +67,7 @@ const onReady = () => {
   })
 }
 
-if (document.readyState === 'loading') {
+if (document.readyState !== 'complete') {
   document.addEventListener('DOMContentLoaded', onReady)
 } else {
   onReady()

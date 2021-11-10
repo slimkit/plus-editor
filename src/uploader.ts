@@ -405,7 +405,7 @@ async function handleUpload(type: string, id: string) {
       uf.cancelUpload = source.cancel.bind(source)
 
       const {
-        data: { uri, method, headers, form, file_key: fileKey },
+        data: { uri, method, headers, form, file_key: fileKey, node, url },
       } = await axios.post(
         'storage',
         {
@@ -441,9 +441,7 @@ async function handleUpload(type: string, id: string) {
       source = axios.CancelToken.source()
       uf.cancelUpload = source.cancel.bind(source)
 
-      const {
-        data: { node, uri: url },
-      } = await axios.request({
+      await axios.request({
         url: uri,
         method,
         headers,

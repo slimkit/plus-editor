@@ -254,6 +254,10 @@ export class VideoBlot extends BlockEmbed {
     if (id) {
       const status = VideoBlot.uploadStatus[id]
 
+      if (status.status === 'ERROR') {
+        delete VideoBlot.uploadStatus[id]
+      }
+
       VideoBlot.eventEmitter.emit('remove', {
         id,
         status: status.status || 'UPLOADING',

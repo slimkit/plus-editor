@@ -494,19 +494,36 @@ async function handleUpload(type: string, id: string) {
     window.postMessage({ funcName: `${type}UrlReceiver`, params }, '*')
   } catch (e) {
     /* eslint require-atomic-updates: */
+    let status, message, errors
     if (axios.isCancel(e)) {
       uf.status = 'CANCEL'
     } else {
       uf.status = 'ERROR'
 
-      let message = e.message || '网络异常导致上传失败'
-      if (e.response && e.response.data) {
-        message = e.response.data.message
-        if (Array.isArray(message)) {
-          message = message[0]
-        }
+      if (e.response) {
+        status = e.response.status
+        const data = e.response.data
 
-        message = message || '服务异常导致上传失败'
+        if (typeof data === 'object') {
+          errors = { ...(data.errors || data) }
+
+          if (Object.keys(errors).length) {
+            for (const key in errors) {
+              message = errors[key]
+              break
+            }
+          } else {
+            message = data.message
+          }
+
+          if (Array.isArray(message)) {
+            message = message.join('\n')
+          }
+        } else {
+          message = `${data}`
+        }
+      } else {
+        message = e.message || '网络异常导致上传失败'
       }
 
       window.postMessage(
@@ -522,6 +539,10 @@ async function handleUpload(type: string, id: string) {
 
 function handleRemove(type: string, params: any) {
   const status: string = params.status
+  if (status === 'ERROR') {
+    uploadFiles.delete(params.id)
+    return
+  }
   if (status !== 'UPLOADING') {
     return
   }

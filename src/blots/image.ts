@@ -289,6 +289,10 @@ export class ImageBlot extends BlockEmbed {
     if (id) {
       const status = ImageBlot.uploadStatus[id]
 
+      if (status.status === 'ERROR') {
+        delete ImageBlot.uploadStatus[id]
+      }
+
       ImageBlot.eventEmitter.emit('remove', {
         id,
         status: status.status || 'UPLOADING',
